@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRCS = main.c utliltes1.c signal_handle.c
+SRCS = main.c utliltes1.c signal_handle.c lexer.c lexer1.c lexer2.c lexer3.c
 
 OBJS = $(SRCS:.c=.o)
 

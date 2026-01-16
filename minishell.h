@@ -42,6 +42,7 @@ typedef struct s_token
 
 //prompt && initilization
 void env_memory_allocation_fail(t_list *list);
+t_list *env_copy(char **env);
 int term_setting(t_term *term);
 void init_terminal(t_term *term);
 void check_arguments(int argc);
@@ -49,5 +50,26 @@ void signal_int_handle();
 void signal_handle();
 void exit_handle(t_term *term);
 int not_all_space(char *line);
+
+
+//tokenizer
+void skip_space(char *line,int *i);
+void tokens_clear(t_token **lst, void (*del)(void *));
+void tokens_add_back(t_token **lst, t_token *new);
+void tokens_memory_allocation_failed(t_token **tokens);
+int check_redirection_in_out(char *line, int *i, t_token *node,t_token **tokens);
+int check_pipe(char *line, int *i, t_token *node,t_token **tokens);
+int check_heredoc_and_append(char *line,int *i, t_token *node,t_token **tokens);
+int handle_operators(char *line, int *i, t_token **tokens);
+char *allocate_word_size(char *line,int *i, t_token **tokens);
+int is_quoted(char *line, int *i);
+char *allocate_word_size_double_quoted(char *line,int *i,t_token **tokens);
+char *allocate_word_size_single_quoted(char *line,int *i,t_token **tokens);
+void handle_single_quoted_words(char *line, int *i,t_token **tokens, t_token *node);
+void handle_quoted_words(char *line, int *i,t_token **tokens, t_token *node);
+void handle_word(char *line,int *i,t_token **tokens);
+void word_assign(t_token *node,char *word,int len);
+int check_quotes(char *line);
+t_token *tokenizer(char *line);
 
 #endif
