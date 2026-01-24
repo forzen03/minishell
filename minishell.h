@@ -15,6 +15,7 @@
 
 extern int g_exit_status;
 
+
 typedef struct s_term
 {
     struct termios original_term;
