@@ -6,6 +6,8 @@ int check_syntax_error(t_token **token)
     t_token *tmp;
 
     tmp = *token;
+    if (!tmp)
+        return (0);
     last_tmp = *token;
     // Check if first token is a pipe
     if (tmp->type == TOKEN_PIPE)

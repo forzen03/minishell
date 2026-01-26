@@ -37,7 +37,7 @@ typedef struct s_token
 {
     t_token_type   type;
     char          *value;//
-    int             quote_type;//if 1 expandable if 0 its not expandable
+    int             quote_type;//0=no quotes(expand), 1=double quotes(expand), 2=single quotes(no expand)
     struct s_token *next;
 }   t_token;
 
@@ -96,6 +96,7 @@ void handle_single_quoted_words(char *line, int *i,t_token **tokens, t_token *no
 void handle_quoted_words(char *line, int *i,t_token **tokens, t_token *node);
 void handle_word(char *line,int *i,t_token **tokens);
 void word_assign(t_token *node,char *word,int len);
+void word_assign_double_quoted(t_token *node,char *word,int len);
 int check_quotes(char *line);
 t_token *tokenizer(char *line);
 

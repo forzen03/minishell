@@ -67,7 +67,7 @@ void	handle_single_quoted_words(char *line, int *i, t_token **tokens, t_token *n
 			(*i)++;
 		word[len] = '\0';
 		node->next = NULL;
-		node->quote_type = 0;
+		node->quote_type = 2;
 		node->value = word;
 		node->type = TOKEN_WORD;
 		tokens_add_back(tokens, node);
@@ -78,33 +78,15 @@ void	word_assign(t_token *node, char *word, int len)
 {
 	word[len] = '\0';
 	node->next = NULL;
-	node->quote_type = 1;
+	node->quote_type = 0;
 	node->value = word;
 	node->type = TOKEN_WORD;
 }
-void	handle_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
+void	word_assign_double_quoted(t_token *node, char *word, int len)
 {
-	int		len;
-	char	*word;
-
-	len = 0;
-	//word = allocate_word_size_double_quoted(line,i,tokens);
-	if (line[*i] == '"')
-	{
-		word = allocate_word_size_double_quoted(line, i, tokens);
-		(*i)++;
-		while (line[*i] && line[*i] != '"')
-		{
-			word[len] = line[*i];
-			(*i)++;
-			len++;
-		}
-		if (line[*i] == '"')
-			(*i)++;
-		word_assign(node, word, len);
-		tokens_add_back(tokens, node);
-		return ;
-	}
-	else if (line[*i] == '\'')
-		handle_single_quoted_words(line, i, tokens, node);
+	word[len] = '\0';
+	node->next = NULL;
+	node->quote_type = 1;
+	node->value = word;
+	node->type = TOKEN_WORD;
 }
