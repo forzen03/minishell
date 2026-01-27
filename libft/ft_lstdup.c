@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
+/*   ft_lstdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/12 17:40:41 by njaradat          #+#    #+#             */
-/*   Updated: 2025/10/01 23:10:11 by noorjaradat      ###   ########.fr       */
+/*   Created: 2025/09/27 18:50:27 by njaradat          #+#    #+#             */
+/*   Updated: 2025/10/02 14:55:15 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+t_list	*ft_lstdup(t_list *lst)
 {
 	t_list	*new_list;
-	void	*temp_content;
 	t_list	*new_node;
+	int		*value_copy;
 
 	new_list = NULL;
-	if (!lst || !f || !del)
-		return (NULL);
 	while (lst)
 	{
-		temp_content = f(lst->content);
-		if (!temp_content)
+		value_copy = malloc(sizeof(int));
+		if (!value_copy)
 		{
 			ft_lstclear(&new_list, free);
 			return (NULL);
 		}
-		new_node = ft_lstnew(temp_content);
+		*value_copy = *((int *)lst->content);
+		new_node = ft_lstnew(value_copy);
 		if (!new_node)
 		{
+			free(value_copy);
 			ft_lstclear(&new_list, free);
 			return (NULL);
 		}

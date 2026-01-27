@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_itol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 01:20:22 by noorjaradat       #+#    #+#             */
-/*   Updated: 2025/08/12 11:21:15 by njaradat         ###   ########.fr       */
+/*   Created: 2025/09/20 14:40:02 by njaradat          #+#    #+#             */
+/*   Updated: 2025/09/20 14:48:36 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+long	ft_atol(const char *nptr)
 {
-	size_t	i;
-	size_t	slen;
+	int		i;
+	long	sum;
+	int		flag;
 
-	slen = ft_strlen(src);
+	flag = 1;
 	i = 0;
-	if (size == 0)
-		return (slen);
-	while (src[i] && i < size - 1)
+	sum = 0;
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		dst[i] = src[i];
+		if (nptr[i] == '-')
+			flag *= -1;
 		i++;
 	}
-	dst[i] = '\0';
-	return (slen);
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		sum = sum * 10 + (nptr[i] - '0');
+		i++;
+	}
+	return (flag * sum);
 }

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	handle_word(char *line, int *i, t_token **tokens)
 {

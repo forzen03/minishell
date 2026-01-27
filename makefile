@@ -1,8 +1,14 @@
 NAME = minishell
 
-SRCS = main.c utliltes1.c signal_handle.c lexer.c lexer1.c lexer2.c lexer3.c \
-		parser_check_syntax.c parser_redirections.c parser_utliltes.c \
-		parser_utliltes2.c parser.c
+SRCS = ./qadah/main.c ./qadah/utliltes1.c ./qadah/signal_handle.c ./qadah/lexer.c ./qadah/lexer1.c ./qadah/lexer2.c ./qadah/lexer3.c \
+		./qadah/parser_check_syntax.c ./qadah/parser_redirections.c ./qadah/parser_utliltes.c \
+		./qadah/parser_utliltes2.c ./qadah/parser.c \
+		./noor/builtin_execution.c \
+		./noor/builtins.c \
+		./noor/fill.c \
+		./noor/pipe_handling.c \
+		./noor/preparation.c \
+		./noor/preparation_utils.c \
 
 OBJS = $(SRCS:.c=.o)
 

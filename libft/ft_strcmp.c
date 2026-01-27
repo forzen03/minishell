@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 01:20:22 by noorjaradat       #+#    #+#             */
-/*   Updated: 2025/08/12 11:21:15 by njaradat         ###   ########.fr       */
+/*   Created: 2025/10/03 15:30:16 by njaradat          #+#    #+#             */
+/*   Updated: 2025/10/11 16:08:28 by noorjaradat      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	size_t	i;
-	size_t	slen;
-
-	slen = ft_strlen(src);
-	i = 0;
-	if (size == 0)
-		return (slen);
-	while (src[i] && i < size - 1)
+	while (*s1 && (*s1 == *s2))
 	{
-		dst[i] = src[i];
-		i++;
+		s1++;
+		s2++;
 	}
-	dst[i] = '\0';
-	return (slen);
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }

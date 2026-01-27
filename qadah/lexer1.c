@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 int	check_pipe(char *line, int *i, t_token *node, t_token **tokens)
 {

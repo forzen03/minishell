@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	env_memory_allocation_fail(t_list *list)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 15:44:32 by mqadah            #+#    #+#             */
-/*   Updated: 2025/08/09 15:44:32 by mqadah           ###   ########.fr       */
+/*   Created: 2025/08/06 12:45:59 by njaradat          #+#    #+#             */
+/*   Updated: 2025/08/09 18:32:22 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,27 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
+	char	*p;
 	size_t	i;
-	char	*dst;
 
-	i = 0;
 	if (s == NULL)
 		return (NULL);
-	if (start >= ft_strlen(s))
-		len = 0;
-	else if (len > ft_strlen(s + start))
-		len = ft_strlen(s + start);
-	dst = (char *)malloc(sizeof(char) * (len + 1));
-	if (dst == NULL)
-		return (NULL);
-	while (i < len && s[start] != '\0')
+	i = 0;
+	if (len == 0 || start >= ft_strlen(s))
 	{
-		dst[i++] = s[start++];
+		p = (char *)malloc(sizeof(char) * 1);
+		if (p == NULL)
+			return (NULL);
+		p[i] = '\0';
+		return (p);
 	}
-	dst[i] = '\0';
-	return (dst);
+	if (ft_strlen(s) < len + start)
+		len = ft_strlen(s) - start;
+	p = (char *)malloc(sizeof(char) * (len + 1));
+	if (p == NULL)
+		return (NULL);
+	while (i < len && s[start])
+		p[i++] = s[start++];
+	p[i] = '\0';
+	return (p);
 }

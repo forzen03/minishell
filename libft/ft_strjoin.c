@@ -3,53 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 15:43:16 by mqadah            #+#    #+#             */
-/*   Updated: 2025/08/09 15:43:16 by mqadah           ###   ########.fr       */
+/*   Created: 2025/08/06 12:55:37 by njaradat          #+#    #+#             */
+/*   Updated: 2025/08/11 17:04:55 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	join_ope(char *join, const char *s1, const char *s2)
-{
-	int	i;
-	int	j;
-	int	n;
-	int	len;
-
-	i = 0;
-	j = 0;
-	n = ft_strlen(s1);
-	len = ft_strlen(s2);
-	while (i < n)
-	{
-		join[i] = s1[i];
-		i++;
-	}
-	while (j < len)
-	{
-		join[i] = s2[j];
-		j++;
-		i++;
-	}
-	join[i] = '\0';
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		n;
-	int		len;
-	char	*join;
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*p;
 
 	if (s1 == NULL || s2 == NULL)
 		return (NULL);
-	n = ft_strlen(s1);
-	len = ft_strlen(s2);
-	join = (char *)malloc(sizeof(char) * (n + len + 1));
-	if (join == NULL)
+	j = 0;
+	i = 0;
+	len = ft_strlen(s1) + ft_strlen(s2);
+	p = (char *)malloc(sizeof(char) * len + 1);
+	if (p == NULL)
 		return (NULL);
-	join_ope(join, s1, s2);
-	return (join);
+	while (s1[j])
+		p[i++] = s1[j++];
+	j = 0;
+	while (s2[j])
+		p[i++] = s2[j++];
+	p[i] = '\0';
+	return (p);
 }

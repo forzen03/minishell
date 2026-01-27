@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast.c                                       :+:      :+:    :+:   */
+/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 15:41:11 by mqadah            #+#    #+#             */
-/*   Updated: 2025/08/09 15:41:11 by mqadah           ###   ########.fr       */
+/*   Created: 2025/08/10 15:32:53 by njaradat          #+#    #+#             */
+/*   Updated: 2025/08/12 16:18:58 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,9 @@
 
 t_list	*ft_lstlast(t_list *lst)
 {
-	t_list	*cur;
-
-	cur = lst;
-	if (cur == NULL)
+	if (!lst)
 		return (NULL);
-	while (cur->next != NULL)
-		cur = cur->next;
-	return (cur);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
 }

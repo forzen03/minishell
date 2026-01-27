@@ -3,115 +3,133 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 15:42:51 by mqadah            #+#    #+#             */
-/*   Updated: 2025/08/09 15:42:51 by mqadah           ###   ########.fr       */
+/*   Created: 2025/08/06 16:56:18 by njaradat          #+#    #+#             */
+/*   Updated: 2025/10/10 19:23:31 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	get_finalsize(const char *s, char c)
+static int	words_count(char const *s, char c, size_t *start)
 {
-	int	count;
-	int	i;
+	int		flag;
+	int		count;
+	size_t	i;
 
-	count = 0;
+	*start = 0;
+	flag = 1;
 	i = 0;
+	count = 0;
 	while (s[i])
 	{
-		while (s[i] && s[i] == c)
-			i++;
-		if (s[i])
+		if (s[i] != c && flag == 1)
 		{
 			count++;
-			while (s[i] && s[i] != c)
-				i++;
+			flag = 0;
 		}
+		if (s[i] == c && flag == 0)
+			flag = 1;
+		i++;
 	}
 	return (count);
 }
 
-static char	*store(const char *s, int *start, char c)
+static int	size_word(char const *s, char c, size_t start)
 {
+	size_t	j;
 	int		i;
-	int		count;
-	int		cur;
-	char	*d;
 
-	count = 0;
+	j = start;
+	if (s[j] == c)
+		j++;
 	i = 0;
-	cur = *start;
-	while (s[cur] != c && s[cur])
+	while (s[j] && s[j] != c)
 	{
-		count++;
-		cur++;
-	}
-	d = (char *)malloc((count + 1) * sizeof(char));
-	if (d == NULL)
-		return (NULL);
-	while (s[*start] && s[*start] != c)
-	{
-		d[i] = s[*start];
 		i++;
-		(*start)++;
+		j++;
 	}
-	d[i] = '\0';
-	return (d);
+	return (i);
 }
 
-static void	free_split(char **d, int j)
+static char	*create_word(char const *s, char c, size_t *start)
+{
+	char	*word;
+	size_t	len;
+
+	while (s[*start] == c)
+		(*start)++;
+	len = size_word(s, c, *start);
+	word = ft_substr(s, *start, len);
+	while (s[*start] && s[*start] != c)
+		(*start)++;
+	if (!word)
+		return (NULL);
+	return (word);
+}
+
+void	free_all(char **s)
 {
 	int	i;
 
 	i = 0;
-	while (i < j)
-	{
-		free(d[i]);
-		i++;
-	}
-	free(d);
-}
-
-static	char	**createpointer(const char *s, char c, int *i, int *j)
-{
-	char	**p;
-
-	if (s == NULL)
-		return (NULL);
-	p = (char **)malloc((get_finalsize(s, c) + 1) * sizeof(char *));
-	if (p == NULL)
-		return (NULL);
-	*i = 0;
-	*j = 0;
-	return (p);
-}
-
-char	**ft_split(const char *s, char c)
-{
-	int		i;
-	int		j;
-	char	**d;
-
-	d = createpointer(s, c, &i, &j);
-	if (d == NULL)
-		return (NULL);
 	while (s[i])
 	{
-		while (s[i] == c && s[i])
-			i++;
-		if (s[i])
-		{
-			d[j] = store(s, &i, c);
-			if (d[j] == NULL)
-			{
-				free_split(d, get_finalsize(s, c));
-				return (NULL);
-			}
-			j++;
-		}
+		free(s[i]);
+		i++;
 	}
-	d[j] = NULL;
-	return (d);
+	free(s);
 }
+
+char	**ft_split(char const *s, char c)
+{
+	char	**arr;
+	char	*word;
+	size_t	start;
+	int		words;
+	int		i;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	words = words_count(s, c, &start);
+	arr = (char **)malloc(sizeof(char *) * (words + 1));
+	if (arr == NULL)
+		return (NULL);
+	while (i < words)
+	{
+		word = create_word(s, c, &start);
+		if (word == NULL)
+		{
+			free_all(arr);
+			return (NULL);
+		}
+		arr[i++] = word;
+	}
+	arr[i] = NULL;
+	return (arr);
+}
+/*
+
+int	main(void)
+{
+	char	**s;
+	int		i;
+
+	//char *str = NULL;
+	s = ft_split("  tripouille  42  ", ' ');
+	i = 0;
+	if (!s)
+	{
+		printf("hello world\n");
+		return (1);
+	}
+	while (s[i])
+	{
+		printf("%s\n", s[i]);
+		free(s[i++]);
+	}
+	free(s);
+}
+*/

@@ -1,31 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_uitoa.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 01:20:22 by noorjaradat       #+#    #+#             */
-/*   Updated: 2025/08/12 11:21:15 by njaradat         ###   ########.fr       */
+/*   Created: 2025/08/16 15:58:44 by njaradat          #+#    #+#             */
+/*   Updated: 2025/10/07 18:19:30 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+static int	number_of_digit(unsigned long res)
 {
-	size_t	i;
-	size_t	slen;
+	int	i;
 
-	slen = ft_strlen(src);
 	i = 0;
-	if (size == 0)
-		return (slen);
-	while (src[i] && i < size - 1)
+	if (res == 0)
+		return (1);
+	while (res != 0)
 	{
-		dst[i] = src[i];
 		i++;
+		res /= 10;
 	}
-	dst[i] = '\0';
-	return (slen);
+	return (i);
+}
+
+char	*ft_uitoa(unsigned int n)
+{
+	char			*p;
+	int				digits;
+	unsigned long	res;
+
+	res = n;
+	digits = number_of_digit(res);
+	p = (char *)malloc(sizeof(char) * (digits + 1));
+	if (p == NULL)
+		return (NULL);
+	p[digits--] = '\0';
+	while (digits >= 0)
+	{
+		p[digits--] = (res % 10) + '0';
+		res /= 10;
+	}
+	return (p);
 }

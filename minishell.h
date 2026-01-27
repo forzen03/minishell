@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/27 16:14:25 by njaradat          #+#    #+#             */
+/*   Updated: 2026/01/27 16:14:25 by njaradat         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
@@ -63,7 +75,22 @@ typedef struct s_cmd
     struct s_cmd    *next;
 }   t_cmd;
 
+typedef enum e_exec_type
+{
+    EXEC_BUILTIN_PARENT,
+    EXEC_BUILTIN_CHILD,
+    EXEC_EXTERNAL
+} t_exec_type;
 
+typedef struct s_execution
+{
+    t_cmd       *cmd_list;
+    int         cmd_count;      // number of commands
+    int         **pipes;        // pipe file descriptors
+    pid_t       *pids;          // one pid per command
+    int         last_status;    // exit status ($?)
+    t_exec_type *types;         // execution type per command
+} t_execution;
 
 
 
@@ -125,5 +152,32 @@ int is_redirection(t_token_type type);
 t_cmd *parser(t_token *tokens);
 void filling_parser_nodes(t_token **tokens, t_cmd **cmds, t_cmd *node);
 t_cmd *create_parser_node(t_token *tokens, t_cmd *cmds);
+
+
+//************************************************************************************************************* */
+//noor : 
+
+// preparation_utils.c functions
+int count_cmds(t_cmd *c);
+int **free_pipes(int **pipes, int count);
+int **create_pipes(int count);
+t_execution *free_execs(t_execution *e);
+
+// preparation.c functions
+t_execution *preparation(t_cmd *c);
+
+// pipe_handling.c helpers (Stage 6)
+int connect_pipes_for_child(int cmd_idx, int **pipes, int cmd_count, int pipe_in, int pipe_out);
+void close_all_pipes(int **pipes, int pipe_count);
+int execute_builtin(t_cmd *cmd, t_list ***env);
+int execute_builtins_parent(t_execution *exec,t_list ***env);
+//builtins : 
+int builtin_cd(char **argv, t_list *env);
+int builtin_export(char **argv, t_list **env);
+int builtin_unset(char **argv, t_list **env);
+int builtin_exit(char **argv);
+int builtin_pwd(void);
+int builtin_echo(char **argv);
+int builtin_env(t_list *env);
 
 #endif

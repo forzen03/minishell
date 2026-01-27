@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_search_node.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/08 01:20:22 by noorjaradat       #+#    #+#             */
-/*   Updated: 2025/08/12 11:21:15 by njaradat         ###   ########.fr       */
+/*   Created: 2026/01/27 00:00:00 by njaradat          #+#    #+#             */
+/*   Updated: 2026/01/27 17:27:22 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+t_list	*ft_search_node(t_list *lst, void *content)
 {
-	size_t	i;
-	size_t	slen;
-
-	slen = ft_strlen(src);
-	i = 0;
-	if (size == 0)
-		return (slen);
-	while (src[i] && i < size - 1)
+	while (lst)
 	{
-		dst[i] = src[i];
-		i++;
+		if (lst->content == content)
+			return (lst);
+		lst = lst->next;
 	}
-	dst[i] = '\0';
-	return (slen);
+	return (NULL);
 }

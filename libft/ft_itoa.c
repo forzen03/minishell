@@ -3,67 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 15:40:21 by mqadah            #+#    #+#             */
-/*   Updated: 2025/08/09 15:40:21 by mqadah           ###   ########.fr       */
+/*   Created: 2025/08/06 22:08:29 by njaradat          #+#    #+#             */
+/*   Updated: 2025/08/12 11:37:47 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static long int	get_len(long int n)
+static int	number_of_digit(long res)
 {
-	long int	len;
+	int	i;
 
-	len = 0;
-	if (n == 0)
+	i = 0;
+	if (res == 0)
 		return (1);
-	if (n < 0)
+	if (res < 0)
+		i++;
+	while (res != 0)
 	{
-		len++;
-		n = -n;
+		i++;
+		res /= 10;
 	}
-	while (n > 0)
-	{
-		n /= 10;
-		len++;
-	}
-	return (len);
+	return (i);
 }
 
-char	*ft_itoa(int x)
+static void	is_negative(long *res, int *flag)
 {
-	long int	len;
-	int			cur;
-	long int	n;
-	char		*d;
+	if (*res < 0)
+	{
+		*res = *res * -1;
+		*flag = 1;
+	}
+}
 
-	n = x;
-	len = get_len(n);
-	d = (char *)malloc((len + 1) * sizeof(char));
-	if (d == NULL)
+char	*ft_itoa(int n)
+{
+	char	*p;
+	int		digits;
+	long	res;
+	int		flag;
+
+	flag = 0;
+	res = n;
+	digits = number_of_digit(res);
+	is_negative(&res, &flag);
+	p = (char *)malloc(sizeof(char) * (digits + 1));
+	if (p == NULL)
 		return (NULL);
-	d[len] = '\0';
-	cur = 0;
-	if (n < 0)
+	if (flag == 1)
+		p[0] = '-';
+	p[digits--] = '\0';
+	while (digits >= flag)
 	{
-		cur = 1;
-		d[0] = '-';
-		n = -n;
+		p[digits--] = (res % 10) + '0';
+		res /= 10;
 	}
-	while (len > cur)
-	{
-		len--;
-		d[len] = (n % 10) + '0';
-		n /= 10;
-	}
-	return (d);
+	return (p);
 }
-
-/*int main(void)
-{
-	int x = -123;
-	printf("%s",ft_itoa(x));
-	return (0);
-}*/

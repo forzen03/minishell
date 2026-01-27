@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*allocate_word_size_double_quoted(char *line, int *i, t_token **tokens)
 {
