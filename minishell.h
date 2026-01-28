@@ -30,47 +30,54 @@ extern int g_exit_status;
 typedef struct s_term
 {
 	struct termios original_term;
+
 	struct termios new_term;
 } t_term;
 
 typedef enum e_token_type
 {
-	TOKEN_WORD,//start from 0
-	TOKEN_PIPE,//1
-	TOKEN_REDIR_IN,//2
-	TOKEN_REDIR_OUT,//3
-	TOKEN_HEREDOC,//4
-	TOKEN_REDIR_APPEND//5
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_HEREDOC,
+	TOKEN_REDIR_APPEND
 } t_token_type;
 
 typedef struct s_token
 {
 	t_token_type type;
-	char          *value;//
-	int             quote_type;//0=no quotes(expand), 1=double quotes(expand), 2=single quotes(no expand)
+
+	char          *value;
+	int             quote_type;
+
 	struct s_token *next;
 } t_token;
 
 typedef struct s_redir
 {
 	t_token_type type;
+
 	char *file;
 	int quote_type;
+
 	struct s_redir *next;
 } t_redir;
 
 typedef struct s_cmd
 {
-	char            **argv;         // NULL-terminated array
-	int             *quote_types;   // Parallel array (same size)//for expander
+	char            **argv;
+	int             *quote_types;
 	t_redir *redirs;
 	int pipe_in;
+
 	int pipe_out;
+
 	struct s_cmd *next;
 } t_cmd;
 
 //prompt && initilization
-void readline_loop(t_term term, char **env);//added this here
+void readline_loop(t_term term, char **env);
 void env_memory_allocation_fail(t_list *list);
 t_list *env_copy(char **env);
 int term_setting(t_term *term);

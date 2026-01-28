@@ -15,7 +15,9 @@
 int get_new_len(t_cmd *cmd)
 {
 	int i;
+
 	int len;
+
 	len = 0;
 	i = 0;
 	while (cmd->argv && cmd->argv[i])
@@ -30,6 +32,7 @@ int get_new_len(t_cmd *cmd)
 void rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
 {
 	int argc;
+
 	char **new_argv;
 	int *new_quote_types;
 	argc = 0;
@@ -54,6 +57,7 @@ void rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
 void expander(t_cmd *cmds, t_list *env)
 {
 	int i;
+
 	t_cmd *tmp;
 	char *new;
 	tmp = cmds;

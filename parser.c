@@ -41,6 +41,7 @@ t_cmd *parser(t_token *tokens)
 void filling_parser_nodes(t_token **tokens, t_cmd **cmds, t_cmd *node)
 {
 	int i;
+
 	i = 0;
 	while (*tokens && (*tokens)->type != TOKEN_PIPE)
 	{
@@ -68,6 +69,7 @@ t_cmd *create_parser_node(t_token *tokens, t_cmd *cmds)
 {
 	t_cmd *node;
 	int len;
+
 	len = 0;
 	node = malloc(sizeof(t_cmd));
 	if (!node)

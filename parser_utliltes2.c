@@ -15,6 +15,7 @@
 int	ft_lstsize_cmds(t_cmd *lst)
 {
 	int		i;
+
 	t_cmd	*cur;
 	cur = lst;
 	i = 0;
@@ -33,6 +34,7 @@ int	ft_lstsize_cmds(t_cmd *lst)
 void cmds_cleaner(t_cmd *cmds)
 {
 	int i;
+
 	t_cmd *tmp;
 	while (cmds)
 	{

@@ -118,7 +118,7 @@ int minishell_cycle(char *line, char **env)
 	tokens = tokenizer(line);
 	if (!tokens)
 		return (0);
-	envc = env_copy(env);//copy for the env as a linked list
+	envc = env_copy(env);
 	cmds = parser(tokens);
 	if (!cmds)
 	{
@@ -154,14 +154,14 @@ void readline_loop(t_term term, char **env)
 	while (1)
 	{
 		line = readline("minishell$ ");
-		if (!line)//ctrl+d(EOF)
+		if (!line)
 			exit_handle(&term);
 		if (!*line)
 		{
 			free(line);
 			continue;
 		}
-		if (*line && not_all_space(line))//for adding to history
+		if (*line && not_all_space(line))
 			add_history(line);
 		if (check_quotes_loop(line))
 			continue;
@@ -178,9 +178,10 @@ int main(int argc, char **argv, char **env)
 {
 	(void)argv;
 	t_term term;
-	check_arguments(argc);//check the argc just the ./minishell$ just the excutable
-	init_terminal(&term);//for termenal settings
-	signal_handle();//for ctrl+c ctrl+/
+
+	check_arguments(argc);
+	init_terminal(&term);
+	signal_handle();
 	readline_loop(term, env);
 	return (0);
 }

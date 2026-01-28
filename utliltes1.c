@@ -25,6 +25,7 @@ t_list	*env_copy(char **env)
 	t_list	*node;
 	char	*dup;
 	int		i;
+
 	i = 0;
 	list = NULL;
 	while (env[i])

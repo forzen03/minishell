@@ -15,6 +15,7 @@
 void	handle_word(char *line, int *i, t_token **tokens)
 {
 	int		len;
+
 	char	*word;
 	t_token	*node;
 	len = 0;
@@ -42,27 +43,31 @@ t_token	*tokenizer(char *line)
 {
 	t_token	*tokens;
 	int		i;
+
 	tokens = NULL;
 	i = 0;
 	while (line[i])
 	{
 		skip_space(line, &i);
-		if (!line[i])//if empty
+		if (!line[i])
 			break;
-		if (handle_operators(line, &i, &tokens))// | > >> << <
+		if (handle_operators(line, &i, &tokens))
 			continue;
-		if (!line[i])//if empty
+		if (!line[i])
 			break;
-		handle_word(line, &i, &tokens);//every thing else
+		handle_word(line, &i, &tokens);
 	}
 	return (tokens);
 }
 
-int	check_quotes(char *line)//to check the unclosed quotes and handle the inside quotes
+int	check_quotes(char *line)
 {
 	int	i;
+
 	int	in_single;
+
 	int	in_double;
+
 	i = 0;
 	in_single = 0;
 	in_double = 0;
@@ -82,6 +87,7 @@ int	check_quotes(char *line)//to check the unclosed quotes and handle the inside
 void	handle_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
 {
 	int		len;
+
 	char	*word;
 	len = 0;
 	//word = allocate_word_size_double_quoted(line,i,tokens);

@@ -58,7 +58,9 @@ char *expand_dollar(char *res, char *s, int *i, t_list *env)
 	char *name;
 	char *value;
 	int start;
+
 	int flag;
+
 	flag = 0;
 	res = expand_exit_status(res, i, s, &flag);
 	if (flag == 0)
@@ -68,18 +70,18 @@ char *expand_dollar(char *res, char *s, int *i, t_list *env)
 	if (!ft_isalpha(s[*i]) && s[*i] != '_')
 		return ft_charjoin(res, '$');
 	start = *i;
-	while (s[*i] && (ft_isalnum(s[*i]) || s[*i] == '_'))//to get the env var
+	while (s[*i] && (ft_isalnum(s[*i]) || s[*i] == '_'))
 		(*i)++;
-	name = ft_substr(s, start, *i - start);//to get the env var
+	name = ft_substr(s, start, *i - start);
 	if (!name)
 		return (NULL);
-	value = get_env_value(env, name,&flag);//to extract it form the envc
+	value = get_env_value(env, name,&flag);
 	free(name);
 	if (!value && flag == 1)
 	{
 		if (!res)
-			res = ft_strdup("");//
-		return (res);//if not found in env
+			res = ft_strdup("");
+		return (res);
 	}
 	if (value)
 		res = ft_strjoin_free(res, value);
@@ -108,7 +110,9 @@ void expand_redirection(t_cmd *tmp, t_list *env)
 void rebuild_argv_loop(t_cmd *cmd, char **new_argv, int *new_quote_types)
 {
 	int i;
+
 	int j;
+
 	j = 0;
 	i = 0;
 	while (cmd->argv && cmd->argv[i])

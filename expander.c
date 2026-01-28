@@ -15,6 +15,7 @@
 char *ft_charjoin(char *s, char c)
 {
 	int i;
+
 	char *new;
 	if (!s)
 	{
@@ -94,7 +95,9 @@ char *expand_one_arg(char *s, t_list *envc, t_cmd *cmds)
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	int		n;
+
 	int		len;
+
 	char	*join;
 	if (s1 == NULL && s2 == NULL)
 		return (NULL);

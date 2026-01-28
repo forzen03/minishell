@@ -26,6 +26,7 @@ t_token	*ft_lstlast_tokens(t_token *lst)
 void cmds_memory_allocation_failed(t_token *tokens, t_cmd *cmds)
 {
 	int i;
+
 	t_cmd *tmp;
 	while (cmds)
 	{
@@ -80,9 +81,10 @@ int argv_len(t_token *tokens)
 {
 	t_token * tmp;
 	int len;
+
 	len = 0;
 	tmp = tokens;
-	while (tmp && tmp->type != TOKEN_PIPE)//agvs len
+	while (tmp && tmp->type != TOKEN_PIPE)
 	{
 		if (tmp->type == TOKEN_WORD)
 			len++;

@@ -15,7 +15,9 @@
 char	*allocate_word_size_double_quoted(char *line, int *i, t_token **tokens)
 {
 	int		start;
+
 	int		len;
+
 	char	*word;
 	start = *i;
 	len = 0;
@@ -38,7 +40,9 @@ char	*allocate_word_size_double_quoted(char *line, int *i, t_token **tokens)
 char	*allocate_word_size_single_quoted(char *line, int *i, t_token **tokens)
 {
 	int		start;
+
 	int		len;
+
 	char	*word;
 	start = *i;
 	len = 0;
@@ -61,6 +65,7 @@ char	*allocate_word_size_single_quoted(char *line, int *i, t_token **tokens)
 void	handle_single_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
 {
 	int		len;
+
 	char	*word;
 	len = 0;
 	word = allocate_word_size_single_quoted(line, i, tokens);

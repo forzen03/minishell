@@ -52,7 +52,7 @@ int	check_heredoc_and_append(char *line, int *i, t_token *node, t_token **tokens
 	return (0);
 }
 
-int	handle_operators(char *line, int *i, t_token **tokens)//operators >> > << < |
+int	handle_operators(char *line, int *i, t_token **tokens)
 {
 	t_token	*node;
 	node = malloc(sizeof(t_token));
@@ -63,7 +63,7 @@ int	handle_operators(char *line, int *i, t_token **tokens)//operators >> > << < 
 		|| check_pipe(line, i, node, tokens))
 	{
 		node->next = NULL;
-		tokens_add_back(tokens, node);//make a new one so its workd with this just change the type for it and it will work:)
+		tokens_add_back(tokens, node);
 		return (1);
 	}
 	free(node);
@@ -73,7 +73,9 @@ int	handle_operators(char *line, int *i, t_token **tokens)//operators >> > << < 
 char	*allocate_word_size(char *line, int *i, t_token **tokens)
 {
 	int		start;
+
 	int		len;
+
 	char	*word;
 	len = 0;
 	start = *i;
