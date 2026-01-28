@@ -38,12 +38,9 @@ void	exit_handle(t_term *term)
 int	not_all_space(char *line)
 {
 	int	i;
-
 	i = 0;
-
 	while (line[i])
 	{
-
 		if (line[i] != ' ' && line[i] != '\t')
 			return (1);
 		i++;

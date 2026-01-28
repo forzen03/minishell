@@ -16,11 +16,9 @@ char *ft_charjoin(char *s, char c)
 {
 	int i;
 	char *new;
-
 	if (!s)
 	{
 		new = malloc(sizeof(char) * 2);
-
 		if (!new)
 			return (NULL);
 		new[0] = c;
@@ -28,11 +26,9 @@ char *ft_charjoin(char *s, char c)
 		return (new);
 	}
 	new = malloc(sizeof(char) * ((int)ft_strlen(s) + 2));
-
 	if (!new)
 		return (NULL);
 	i = 0;
-
 	while (s[i])
 	{
 		new[i] = s[i];
@@ -48,13 +44,11 @@ void join_ope(char *join, const char *s1, const char *s2)
 {
 	int i = 0;
 	int j = 0;
-
 	while (s1[i])
 	{
 		join[i] = s1[i];
 		i++;
 	}
-
 	while (s2[j])
 	{
 		join[i + j] = s2[j];
@@ -75,28 +69,23 @@ char *expand_one_arg(char *s, t_list *envc, t_cmd *cmds)
 {
 	int i = 0;
 	char *res = NULL;
-
 	while (s[i])
 	{
-
 		if (s[i] == '$')
 		{
 			i++;
 			res = expand_dollar(res, s, &i, envc);
-
 			if (!res)
 				memory_allocation_failed_expand(cmds, envc);
 		}
 		else
 		{
 			res = ft_charjoin(res, s[i]);
-
 			if (!res)
 				memory_allocation_failed_expand(cmds, envc);
 			i++;
 		}
 	}
-
 	if (!res)
 		res = ft_strdup("");
 	return (res);
@@ -107,19 +96,15 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	int		n;
 	int		len;
 	char	*join;
-
 	if (s1 == NULL && s2 == NULL)
 		return (NULL);
-
 	if (s1 == NULL)
 		return (s2);
-
 	if (s2 == NULL)
 		return (s1);
 	n = ft_strlen(s1);
 	len = ft_strlen(s2);
 	join = (char *)malloc(sizeof(char) * (n + len + 1));
-
 	if (join == NULL)
 		return (NULL);
 	join_ope(join, s1, s2);

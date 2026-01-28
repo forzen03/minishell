@@ -25,18 +25,14 @@ t_list	*env_copy(char **env)
 	t_list	*node;
 	char	*dup;
 	int		i;
-
 	i = 0;
 	list = NULL;
-
 	while (env[i])
 	{
 		dup = ft_strdup(env[i]);
-
 		if (!dup)
 			env_memory_allocation_fail(list);
 		node = ft_lstnew(dup);
-
 		if (!node)
 		{
 			free(dup);
@@ -78,7 +74,6 @@ void	init_terminal(t_term *term)
 
 void	check_arguments(int argc)
 {
-
 	if (argc != 1)
 	{
 		write(2, "Error with arguments number\n", 29);

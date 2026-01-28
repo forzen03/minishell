@@ -63,7 +63,6 @@ int g_exit_status = 0;
 //             type_str = "?";
 //             type_name = "UNKNOWN";
 //         }
-
 //         printf("    Redir: %s (%s) -> %s (expandable: %d)\n", type_str, type_name, redir->file, redir->quote_type);
 //         redir = redir->next;
 //     }
@@ -73,12 +72,10 @@ int g_exit_status = 0;
 // {
 //     int cmd_num = 1;
 //     int i;
-
 //     while (cmds)
 //     {
 //         printf("Command %d:\n", cmd_num);
 //         printf("  pipe_in: %d, pipe_out: %d\n", cmds->pipe_in, cmds->pipe_out);
-
 //         // print argv
 //         printf("  argv: ");
 //         for (i = 0; cmds->argv && cmds->argv[i]; i++)
@@ -86,7 +83,6 @@ int g_exit_status = 0;
 //             printf("\"%s...\" ", cmds->argv[i]);
 //         }
 //         printf("\n");
-
 //         // print quote_types
 //         printf("  quote_types: ");
 //         for (i = 0; cmds->quote_types && cmds->argv && cmds->argv[i]; i++)
@@ -94,11 +90,9 @@ int g_exit_status = 0;
 //             printf("%d ", cmds->quote_types[i]);
 //         }
 //         printf("\n");
-
 //         // print redirections
 //         if (cmds->redirs)
 //             print_redirs(cmds->redirs);
-
 //         printf("\n");
 //         cmds = cmds->next;
 //         cmd_num++;
@@ -108,7 +102,6 @@ int g_exit_status = 0;
 // void print_env(t_list *env)
 // {
 //     t_list *tmp = env;
-
 //     while (tmp)
 //     {
 //         if (tmp->content) // Only print if value exists
@@ -122,14 +115,11 @@ int minishell_cycle(char *line, char **env)
 	t_token *tokens;
 	t_list *envc;
 	t_cmd *cmds;
-
 	tokens = tokenizer(line);
-
 	if (!tokens)
 		return (0);
 	envc = env_copy(env);//copy for the env as a linked list
 	cmds = parser(tokens);
-
 	if (!cmds)
 	{
 		tokens_clear(&tokens, free);
@@ -161,13 +151,11 @@ int check_quotes_loop(char *line)
 void readline_loop(t_term term, char **env)
 {
 	char *line;
-
 	while (1)
 	{
 		line = readline("minishell$ ");
 		if (!line)//ctrl+d(EOF)
 			exit_handle(&term);
-
 		if (!*line)
 		{
 			free(line);
@@ -190,7 +178,6 @@ int main(int argc, char **argv, char **env)
 {
 	(void)argv;
 	t_term term;
-
 	check_arguments(argc);//check the argc just the ./minishell$ just the excutable
 	init_terminal(&term);//for termenal settings
 	signal_handle();//for ctrl+c ctrl+/
