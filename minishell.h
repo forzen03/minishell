@@ -41,9 +41,6 @@ typedef struct s_token
     struct s_token *next;
 }   t_token;
 
-
-
-
 typedef struct s_redir
 {
     t_token_type    type;
@@ -68,6 +65,7 @@ typedef struct s_cmd
 
 
 //prompt && initilization
+void readline_loop(t_term term, char **env);//added this here 
 void env_memory_allocation_fail(t_list *list);
 t_list *env_copy(char **env);
 int term_setting(t_term *term);
@@ -125,5 +123,22 @@ int is_redirection(t_token_type type);
 t_cmd *parser(t_token *tokens);
 void filling_parser_nodes(t_token **tokens, t_cmd **cmds, t_cmd *node);
 t_cmd *create_parser_node(t_token *tokens, t_cmd *cmds);
+
+//expander
+char *ft_charjoin(char *s, char c);
+void join_ope(char *join, const char *s1, const char *s2);
+char *ft_charjoin(char *s, char c);
+void join_ope(char *join, const char *s1, const char *s2);
+void memory_allocation_failed_expand(t_cmd *cmds,t_list *envc);
+char *expand_one_arg(char *s, t_list *envc,t_cmd *cmds);
+char	*ft_strjoin_free(char *s1, char *s2);
+char *get_env_value(t_list *env, char *name,int *flag);
+char *expand_exit_status(char *res,int *i,char *s,int *flag);
+char *expand_dollar(char *res, char *s, int *i, t_list *env);
+void expand_redirection(t_cmd *tmp,t_list *env);
+void expander(t_cmd *cmds, t_list *env);
+int get_new_len(t_cmd *cmd);
+void rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env);
+void rebuild_argv_loop(t_cmd *cmd,char    **new_argv,int     *new_quote_types);
 
 #endif

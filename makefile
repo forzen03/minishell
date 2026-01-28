@@ -2,7 +2,7 @@ NAME = minishell
 
 SRCS = main.c utliltes1.c signal_handle.c lexer.c lexer1.c lexer2.c lexer3.c \
 		parser_check_syntax.c parser_redirections.c parser_utliltes.c \
-		parser_utliltes2.c parser.c
+		parser_utliltes2.c parser.c expander.c expander1.c exapnder2.c
 
 OBJS = $(SRCS:.c=.o)
 
