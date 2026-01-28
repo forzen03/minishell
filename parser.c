@@ -30,7 +30,6 @@ t_cmd *parser(t_token *tokens)
 	return (cmds);
 }
 
-
 void filling_parser_nodes(t_token **tokens, t_cmd **cmds, t_cmd *node)
 {
 	int i;

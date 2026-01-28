@@ -83,7 +83,7 @@ void	handle_single_quoted_words(char *line, int *i, t_token **tokens, t_token *n
 		node->value = word;
 		node->type = TOKEN_WORD;
 		tokens_add_back(tokens, node);
-		return ;
+		return;
 	}
 }
 

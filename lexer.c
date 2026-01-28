@@ -15,7 +15,7 @@ void	tokens_clear(t_token **lst, void (*del)(void *))
 	t_token	*next;
 
 	if (!lst || !del)
-		return ;
+		return;
 
 	while (*lst)
 	{
@@ -32,12 +32,12 @@ void	tokens_add_back(t_token **lst, t_token *new)
 	t_token	*cur;
 
 	if (!lst || !new)
-		return ;
+		return;
 
 	if (*lst == NULL)
 	{
 		*lst = new;
-		return ;
+		return;
 	}
 	cur = *lst;
 

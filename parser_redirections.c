@@ -27,13 +27,13 @@ void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
 	t_redir	*cur;
 
 	if (lst == NULL || new == NULL)
-		return ;
+		return;
 	cur = *lst;
 
 	if (cur == NULL)
 	{
 		*lst = new;
-		return ;
+		return;
 	}
 
 	while (cur->next != NULL)
@@ -47,7 +47,7 @@ void	ft_lstclear_redirections(t_redir **lst, void (*del)(void *))
 	t_redir	*next;
 
 	if (lst == NULL || del == NULL)
-		return ;
+		return;
 
 	while (*lst != NULL)
 	{

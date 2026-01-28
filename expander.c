@@ -17,11 +17,11 @@ char *ft_charjoin(char *s, char c)
 	}
 	new = malloc(sizeof(char) * ((int)ft_strlen(s) + 2));
 
-	if(!new)
+	if (!new)
 		return (NULL);
 	i = 0;
 
-	while(s[i])
+	while (s[i])
 	{
 		new[i] = s[i];
 		i++;
@@ -36,7 +36,7 @@ void join_ope(char *join, const char *s1, const char *s2)
 {
 	int i = 0;
 	int j = 0;
-    
+
 	while (s1[i])
 	{
 		join[i] = s1[i];
@@ -51,18 +51,18 @@ void join_ope(char *join, const char *s1, const char *s2)
 	join[i + j] = '\0';
 }
 
-void memory_allocation_failed_expand(t_cmd *cmds,t_list *envc)
+void memory_allocation_failed_expand(t_cmd *cmds, t_list *envc)
 {
 	cmds_cleaner(cmds);
 	ft_lstclear(&envc, free);
-	write(2,"Memory allocation failed\n",26);
+	write(2, "Memory allocation failed\n", 26);
 	exit(1);
 }
 
-char *expand_one_arg(char *s, t_list *envc,t_cmd *cmds)
+char *expand_one_arg(char *s, t_list *envc, t_cmd *cmds)
 {
-	int     i = 0;
-	char    *res = NULL;
+	int i = 0;
+	char *res = NULL;
 
 	while (s[i])
 	{
@@ -73,14 +73,14 @@ char *expand_one_arg(char *s, t_list *envc,t_cmd *cmds)
 			res = expand_dollar(res, s, &i, envc);
 
 			if (!res)
-				memory_allocation_failed_expand(cmds,envc);
+				memory_allocation_failed_expand(cmds, envc);
 		}
 		else
 		{
 			res = ft_charjoin(res, s[i]);
 
-			if(!res)
-				memory_allocation_failed_expand(cmds,envc);
+			if (!res)
+				memory_allocation_failed_expand(cmds, envc);
 			i++;
 		}
 	}

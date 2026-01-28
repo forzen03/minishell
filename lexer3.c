@@ -14,7 +14,7 @@ void	handle_word(char *line, int *i, t_token **tokens)
 	if (is_quoted(line, i))
 	{
 		handle_quoted_words(line, i, tokens, node);
-		return ;
+		return;
 	}
 	word = allocate_word_size(line, i, tokens);
 	while (line[*i] && line[*i] != '|' && line[*i] != '<' && line[*i] != '>'
@@ -40,11 +40,11 @@ t_token	*tokenizer(char *line)
 	{
 		skip_space(line, &i);
 		if (!line[i])//if empty
-			break ;
+			break;
 		if (handle_operators(line, &i, &tokens))// | > >> << <
-			continue ;
+			continue;
 		if (!line[i])//if empty
-			break ;
+			break;
 		handle_word(line, &i, &tokens);//every thing else
 	}
 	return (tokens);
@@ -100,7 +100,7 @@ void	handle_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
 			(*i)++;
 		word_assign_double_quoted(node, word, len);
 		tokens_add_back(tokens, node);
-		return ;
+		return;
 	}
 
 	else if (line[*i] == '\'')

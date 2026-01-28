@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 int	ft_lstsize_cmds(t_cmd *lst)
 {
 	int		i;
@@ -27,17 +26,17 @@ void cmds_cleaner(t_cmd *cmds)
 	int i;
 	t_cmd *tmp;
 
-	while(cmds)
+	while (cmds)
 	{
 		i = 0;
 
-		if(cmds->quote_types)
+		if (cmds->quote_types)
 			free(cmds->quote_types);
 
 		if (cmds->redirs)
-			ft_lstclear_redirections(&cmds->redirs,free);
+			ft_lstclear_redirections(&cmds->redirs, free);
 
-		if(cmds->argv)
+		if (cmds->argv)
 		{
 
 			while (cmds->argv[i])
@@ -55,8 +54,8 @@ void cmds_cleaner(t_cmd *cmds)
 
 int is_redirection(t_token_type type)
 {
-	return (type == TOKEN_REDIR_IN    ||
-			type == TOKEN_REDIR_OUT   ||
+	return (type == TOKEN_REDIR_IN ||
+			type == TOKEN_REDIR_OUT ||
 			type == TOKEN_REDIR_APPEND||
 			type == TOKEN_HEREDOC);
 }

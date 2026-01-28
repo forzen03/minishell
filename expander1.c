@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char *get_env_value(t_list *env, char *name,int *flag)
+char *get_env_value(t_list *env, char *name, int *flag)
 {
 	char *entry;
 
@@ -16,7 +16,7 @@ char *get_env_value(t_list *env, char *name,int *flag)
 	return (NULL);
 }
 
-char *expand_exit_status(char *res,int *i,char *s,int *flag)
+char *expand_exit_status(char *res, int *i, char *s, int *flag)
 {
 	char *value;
 
@@ -24,19 +24,19 @@ char *expand_exit_status(char *res,int *i,char *s,int *flag)
 	{
 		value = ft_itoa(g_exit_status);
 
-		if(!value)
+		if (!value)
 		{
 			(*flag) = 2;
 			return (NULL);
 		}
 		(*i)++;
-		res = ft_strjoin_free(res,value);
+		res = ft_strjoin_free(res, value);
 
-		if(!res)
+		if (!res)
 		{
-		   free(value);
-		   (*flag) = 2;
-		   return (NULL); 
+		 free(value);
+		 (*flag) = 2;
+		 return (NULL);
 		}
 		(*flag) = 0;
 		return (res);
@@ -44,7 +44,6 @@ char *expand_exit_status(char *res,int *i,char *s,int *flag)
 	(*flag) = 1;
 	return (res);
 }
-
 
 char *expand_dollar(char *res, char *s, int *i, t_list *env)
 {
@@ -54,7 +53,7 @@ char *expand_dollar(char *res, char *s, int *i, t_list *env)
 	int flag;
 
 	flag = 0;
-	res = expand_exit_status(res,i,s,&flag);
+	res = expand_exit_status(res, i, s, &flag);
 
 	if (flag == 0)
 		return (res);
@@ -70,7 +69,7 @@ char *expand_dollar(char *res, char *s, int *i, t_list *env)
 
 	if (!name)
 		return (NULL);
-	value = get_env_value(env, name,&flag);//to extract it form the envc 
+	value = get_env_value(env, name,&flag);//to extract it form the envc
 	free(name);
 
 	if (!value && flag == 1)
@@ -86,7 +85,7 @@ char *expand_dollar(char *res, char *s, int *i, t_list *env)
 	return (res);
 }
 
-void expand_redirection(t_cmd *tmp,t_list *env)
+void expand_redirection(t_cmd *tmp, t_list *env)
 {
 	t_redir *r;
 	char *new;
@@ -109,7 +108,7 @@ void expand_redirection(t_cmd *tmp,t_list *env)
 	}
 }
 
-void rebuild_argv_loop(t_cmd *cmd,char    **new_argv,int     *new_quote_types)
+void rebuild_argv_loop(t_cmd *cmd, char **new_argv, int *new_quote_types)
 {
 	int i;
 	int j;

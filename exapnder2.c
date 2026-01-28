@@ -20,24 +20,24 @@ int get_new_len(t_cmd *cmd)
 
 void rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
 {
-	int     argc;
-	char    **new_argv;
-	int     *new_quote_types;
+	int argc;
+	char **new_argv;
+	int *new_quote_types;
 
 	argc = 0;
 	argc = get_new_len(cmds);
 	new_argv = malloc(sizeof(char *) * (argc + 1));
 
 	if (!new_argv)
-		memory_allocation_failed_expand(cmds,env);
+		memory_allocation_failed_expand(cmds, env);
 	new_quote_types = malloc(sizeof(int) * argc);
 
-	if(!new_quote_types)
+	if (!new_quote_types)
 	{
 		free(new_argv);
-		memory_allocation_failed_expand(cmds,env);
+		memory_allocation_failed_expand(cmds, env);
 	}
-	rebuild_argv_loop(cmd,new_argv,new_quote_types);
+	rebuild_argv_loop(cmd, new_argv, new_quote_types);
 	new_argv[argc] = NULL;
 	free(cmd->argv);
 	free(cmd->quote_types);
@@ -47,9 +47,9 @@ void rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
 
 void expander(t_cmd *cmds, t_list *env)
 {
-	int     i;
-	t_cmd   *tmp;
-	char    *new;
+	int i;
+	t_cmd *tmp;
+	char *new;
 
 	tmp = cmds;
 

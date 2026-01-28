@@ -10,7 +10,6 @@ int g_exit_status = 0;
 //     struct s_redir  *next;
 // }   t_redir;
 
-
 // typedef struct s_cmd
 // {
 //     char            **argv;         // NULL-terminated array
@@ -20,9 +19,6 @@ int g_exit_status = 0;
 //     int             pipe_out;
 //     struct s_cmd    *next;
 // }   t_cmd;
-
-
-
 
 // void print_redirs(t_redir *redir)
 // {
@@ -97,9 +93,6 @@ int g_exit_status = 0;
 //     }
 // }
 
-
-
-
 // void print_env(t_list *env)
 // {
 //     t_list *tmp = env;
@@ -112,13 +105,12 @@ int g_exit_status = 0;
 //     }
 // }
 
-
-int minishell_cycle(char *line,char **env)
+int minishell_cycle(char *line, char **env)
 {
 	t_token *tokens;
-	t_list  *envc;
+	t_list *envc;
 	t_cmd *cmds;
-   
+
 	tokens = tokenizer(line);
 
 	if (!tokens)
@@ -126,16 +118,16 @@ int minishell_cycle(char *line,char **env)
 	envc = env_copy(env);//copy for the env as a linked list
 	cmds = parser(tokens);
 
-	if(!cmds)
+	if (!cmds)
 	{
 		tokens_clear(&tokens, free);
 		ft_lstclear(&envc, free);
 		cmds_cleaner(cmds);
-		return(1);
+		return (1);
 	}
 	tokens_clear(&tokens, free);
     // print_env(envc);
-	expander(cmds,envc);
+	expander(cmds, envc);
     //print_parser(cmds);
     //excute() Nour's Part يا رب يخلص
 	cmds_cleaner(cmds);
@@ -145,35 +137,35 @@ int minishell_cycle(char *line,char **env)
 
 int check_quotes_loop(char *line)
 {
-	if(check_quotes(line))
+	if (check_quotes(line))
 	{
-		write(2,"Syntax error: unclosed quotes\n",31);
+		write(2, "Syntax error: unclosed quotes\n", 31);
 		free(line);
 		return (1);
 	}
 	return (0);
 }
 
-void readline_loop(t_term term,char **env)
+void readline_loop(t_term term, char **env)
 {
-	char    *line;
+	char *line;
 
-	while(1)
+	while (1)
 	{
 		line = readline("minishell$ ");
-		if(!line)//ctrl+d(EOF)
+		if (!line)//ctrl+d(EOF)
 			exit_handle(&term);
 
 		if (!*line)
 		{
 			free(line);
-			continue ;
+			continue;
 		}
-		if(*line && not_all_space(line))//for adding to history
+		if (*line && not_all_space(line))//for adding to history
 			add_history(line);
 		if (check_quotes_loop(line))
 			continue;
-		if (minishell_cycle(line,env))
+		if (minishell_cycle(line, env))
 		{
 			free(line);
 			continue;
@@ -182,14 +174,14 @@ void readline_loop(t_term term,char **env)
 	}
 }
 
-int main(int argc,char **argv,char **env)
+int main(int argc, char **argv, char **env)
 {
 	(void)argv;
-	t_term  term;
+	t_term term;
 
 	check_arguments(argc);//check the argc just the ./minishell$ just the excutable
 	init_terminal(&term);//for termenal settings
 	signal_handle();//for ctrl+c ctrl+/
-	readline_loop(term,env);
+	readline_loop(term, env);
 	return (0);
 }
