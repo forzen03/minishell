@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int get_new_len(t_cmd *cmd)
+int	get_new_len(t_cmd * cmd)
 {
 	int i;
 
@@ -29,12 +29,12 @@ int get_new_len(t_cmd *cmd)
 	return (len);
 }
 
-void rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
+void	rebuild_argv(t_cmd * cmd, t_cmd * cmds, t_list * env)
 {
 	int argc;
 
-	char **new_argv;
-	int *new_quote_types;
+	char ** new_argv;
+	int * new_quote_types;
 	argc = 0;
 	argc = get_new_len(cmds);
 	new_argv = malloc(sizeof(char *) * (argc + 1));
@@ -54,12 +54,12 @@ void rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
 	cmd->quote_types = new_quote_types;
 }
 
-void expander(t_cmd *cmds, t_list *env)
+void	expander(t_cmd * cmds, t_list * env)
 {
 	int i;
 
-	t_cmd *tmp;
-	char *new;
+	t_cmd * tmp;
+	char * new;
 	tmp = cmds;
 	while (tmp)
 	{

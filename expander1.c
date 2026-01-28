@@ -12,70 +12,70 @@
 
 #include "minishell.h"
 
-char *get_env_value(t_list *env, char *name, int *flag)
+char * get_env_value(t_list * env, char * name, int * flag)
 {
-	char *entry;
+	char * entry;
 	while (env)
 	{
 		entry = env->content;
-		(*flag) = 0;
+		(* flag) = 0;
 		if (!ft_strncmp(entry, name, ft_strlen(name)) && entry[ft_strlen(name)] == '=')
-			return ft_strdup(entry + ft_strlen(name) + 1);
+			return (ft_strdup(entry + ft_strlen(name) + 1));
 		env = env->next;
 	}
-	(*flag) = 1;
+	(* flag) = 1;
 	return (NULL);
 }
 
-char *expand_exit_status(char *res, int *i, char *s, int *flag)
+char * expand_exit_status(char * res, int * i, char * s, int * flag)
 {
-	char *value;
-	if (s[*i] == '?')
+	char * value;
+	if (s[* i] == '?')
 	{
 		value = ft_itoa(g_exit_status);
 		if (!value)
 		{
-			(*flag) = 2;
+			(* flag) = 2;
 			return (NULL);
 		}
-		(*i)++;
+		(* i)++;
 		res = ft_strjoin_free(res, value);
 		if (!res)
 		{
 		 free(value);
-		 (*flag) = 2;
+		 (* flag) = 2;
 		 return (NULL);
 		}
-		(*flag) = 0;
+		(* flag) = 0;
 		return (res);
 	}
-	(*flag) = 1;
+	(* flag) = 1;
 	return (res);
 }
 
-char *expand_dollar(char *res, char *s, int *i, t_list *env)
+char * expand_dollar(char * res, char * s, int * i, t_list * env)
 {
-	char *name;
-	char *value;
+	char * name;
+	char * value;
 	int start;
 
 	int flag;
 
 	flag = 0;
-	res = expand_exit_status(res, i, s, &flag);
+	res = expand_exit_status(res, i, s, & flag);
 	if (flag == 0)
 		return (res);
 	if (flag == 2)
 		return (NULL);
-	if (!ft_isalpha(s[*i]) && s[*i] != '_')
-		return ft_charjoin(res, '$');
-	start = *i;
-	while (s[*i] && (ft_isalnum(s[*i]) || s[*i] == '_'))
-		(*i)++;
-	name = ft_substr(s, start, *i - start);
+	if (!ft_isalpha(s[* i]) && s[* i] != '_')
+		return (ft_charjoin(res, '$'));
+	start = * i;
+	while (s[* i] && (ft_isalnum(s[* i]) || s[* i] == '_'))
+		(* i)++;
+	name = ft_substr(s, start, * i - start);
 	if (!name)
 		return (NULL);
-	value = get_env_value(env, name,&flag);
+	value = get_env_value(env, name,& flag);
 	free(name);
 	if (!value && flag == 1)
 	{
@@ -88,10 +88,10 @@ char *expand_dollar(char *res, char *s, int *i, t_list *env)
 	return (res);
 }
 
-void expand_redirection(t_cmd *tmp, t_list *env)
+void	expand_redirection(t_cmd * tmp, t_list * env)
 {
-	t_redir *r;
-	char *new;
+	t_redir * r;
+	char * new;
 	r = tmp->redirs;
 	while (r)
 	{
@@ -107,7 +107,7 @@ void expand_redirection(t_cmd *tmp, t_list *env)
 	}
 }
 
-void rebuild_argv_loop(t_cmd *cmd, char **new_argv, int *new_quote_types)
+void	rebuild_argv_loop(t_cmd * cmd, char ** new_argv, int * new_quote_types)
 {
 	int i;
 

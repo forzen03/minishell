@@ -27,15 +27,15 @@ void	signal_handle()
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	exit_handle(t_term *term)
+void	exit_handle(t_term * term)
 {
 	rl_clear_history();
-	tcsetattr(STDIN_FILENO, TCSANOW, &term->original_term);
+	tcsetattr(STDIN_FILENO, TCSANOW, & term->original_term);
 	write(2, "exit\n", 6);
 	exit(g_exit_status);
 }
 
-int	not_all_space(char *line)
+int	not_all_space(char * line)
 {
 	int	i;
 

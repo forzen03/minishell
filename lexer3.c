@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-void	handle_word(char *line, int *i, t_token **tokens)
+void	handle_word(char * line, int * i, t_token ** tokens)
 {
 	int		len;
 
-	char	*word;
-	t_token	*node;
+	char	* word;
+	t_token	* node;
 	len = 0;
 	node = malloc(sizeof(t_token));
 	if (!node)
@@ -28,39 +28,39 @@ void	handle_word(char *line, int *i, t_token **tokens)
 		return;
 	}
 	word = allocate_word_size(line, i, tokens);
-	while (line[*i] && line[*i] != '|' && line[*i] != '<' && line[*i] != '>'
-		&& line[*i] != ' ' && line[*i] != '"' && line[*i] != '\'')
+	while (line[* i] && line[* i] != '|' && line[* i] != '<' && line[* i] != '>'
+		&& line[* i] != ' ' && line[* i] != '"' && line[* i] != '\'')
 	{
-		word[len] = line[*i];
-		(*i)++;
+		word[len] = line[* i];
+		(* i)++;
 		len++;
 	}
 	word_assign(node, word, len);
 	tokens_add_back(tokens, node);
 }
 
-t_token	*tokenizer(char *line)
+t_token	* tokenizer(char * line)
 {
-	t_token	*tokens;
+	t_token	* tokens;
 	int		i;
 
 	tokens = NULL;
 	i = 0;
 	while (line[i])
 	{
-		skip_space(line, &i);
+		skip_space(line, & i);
 		if (!line[i])
 			break;
-		if (handle_operators(line, &i, &tokens))
+		if (handle_operators(line, & i, & tokens))
 			continue;
 		if (!line[i])
 			break;
-		handle_word(line, &i, &tokens);
+		handle_word(line, & i, & tokens);
 	}
 	return (tokens);
 }
 
-int	check_quotes(char *line)
+int	check_quotes(char * line)
 {
 	int	i;
 
@@ -84,29 +84,29 @@ int	check_quotes(char *line)
 	return (0);
 }
 
-void	handle_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
+void	handle_quoted_words(char * line, int * i, t_token ** tokens, t_token * node)
 {
 	int		len;
 
-	char	*word;
+	char	* word;
 	len = 0;
-	//word = allocate_word_size_double_quoted(line,i,tokens);
-	if (line[*i] == '"')
+	// word = allocate_word_size_double_quoted(line,i,tokens);
+	if (line[* i] == '"')
 	{
 		word = allocate_word_size_double_quoted(line, i, tokens);
-		(*i)++;
-		while (line[*i] && line[*i] != '"')
+		(* i)++;
+		while (line[* i] && line[* i] != '"')
 		{
-			word[len] = line[*i];
-			(*i)++;
+			word[len] = line[* i];
+			(* i)++;
 			len++;
 		}
-		if (line[*i] == '"')
-			(*i)++;
+		if (line[* i] == '"')
+			(* i)++;
 		word_assign_double_quoted(node, word, len);
 		tokens_add_back(tokens, node);
 		return;
 	}
-	else if (line[*i] == '\'')
+	else if (line[* i] == '\'')
 		handle_single_quoted_words(line, i, tokens, node);
 }
