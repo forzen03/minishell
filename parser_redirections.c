@@ -2,22 +2,24 @@
 
 void add_redir(t_cmd *cmd, t_token **tokens)
 {
-    t_redir *node;
+	t_redir *node;
 
-    node = malloc(sizeof(t_redir));
-    if (!node)
-        cmds_memory_allocation_failed(*tokens, cmd);
+	node = malloc(sizeof(t_redir));
 
-    node->type = (*tokens)->type;
+	if (!node)
+		cmds_memory_allocation_failed(*tokens, cmd);
 
-    node->file = ft_strdup((*tokens)->next->value);
-    if (!node->file)
-        cmds_memory_allocation_failed(*tokens, cmd);
-    node->quote_type = (*tokens)->next->quote_type;
-    node->next = NULL;
-    ft_lstadd_back_redir(&cmd->redirs, node);
+	node->type = (*tokens)->type;
 
-    *tokens = (*tokens)->next;
+	node->file = ft_strdup((*tokens)->next->value);
+
+	if (!node->file)
+		cmds_memory_allocation_failed(*tokens, cmd);
+	node->quote_type = (*tokens)->next->quote_type;
+	node->next = NULL;
+	ft_lstadd_back_redir(&cmd->redirs, node);
+
+	*tokens = (*tokens)->next;
 }
 
 void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
@@ -27,11 +29,13 @@ void	ft_lstadd_back_redir(t_redir **lst, t_redir *new)
 	if (lst == NULL || new == NULL)
 		return ;
 	cur = *lst;
+
 	if (cur == NULL)
 	{
 		*lst = new;
 		return ;
 	}
+
 	while (cur->next != NULL)
 		cur = cur->next;
 	cur->next = new;
@@ -44,6 +48,7 @@ void	ft_lstclear_redirections(t_redir **lst, void (*del)(void *))
 
 	if (lst == NULL || del == NULL)
 		return ;
+
 	while (*lst != NULL)
 	{
 		temp = *lst;

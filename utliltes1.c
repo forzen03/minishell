@@ -6,6 +6,7 @@ void	env_memory_allocation_fail(t_list *list)
 	write(2, "Memory allocation failed\n", 26);
 	exit(1);
 }
+
 t_list	*env_copy(char **env)
 {
 	t_list	*list;
@@ -15,12 +16,15 @@ t_list	*env_copy(char **env)
 
 	i = 0;
 	list = NULL;
+
 	while (env[i])
 	{
 		dup = ft_strdup(env[i]);
+
 		if (!dup)
 			env_memory_allocation_fail(list);
 		node = ft_lstnew(dup);
+
 		if (!node)
 		{
 			free(dup);
@@ -59,8 +63,10 @@ void	init_terminal(t_term *term)
 	if (term_setting(term))
 		exit(1);
 }
+
 void	check_arguments(int argc)
 {
+
 	if (argc != 1)
 	{
 		write(2, "Error with arguments number\n", 29);
