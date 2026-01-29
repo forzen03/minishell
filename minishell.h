@@ -24,7 +24,7 @@
 #include <signal.h>
 #include <readline/history.h>
 #include <termios.h>
-
+#include <limits.h>
 extern int g_exit_status;
 
 
@@ -176,7 +176,7 @@ int builtin_cd(char **argv, t_list *env);
 int builtin_export(char **argv, t_list **env);
 int builtin_unset(char **argv, t_list **env);
 int builtin_exit(char **argv);
-int builtin_pwd(void);
+int builtin_pwd(t_list **env);
 int builtin_echo(char **argv);
 int builtin_env(t_list *env);
 

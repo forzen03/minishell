@@ -6,7 +6,7 @@
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:13:24 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/01/27 16:13:40 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/01/29 12:25:47 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int execute_builtin(t_cmd *cmd, t_list ***env)
     else if (ft_strcmp(cmd->argv[0], "exit") == 0)
         return (builtin_exit(cmd->argv));
     else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-        return (builtin_pwd());
+        return (builtin_pwd(*env));
     else if (ft_strcmp(cmd->argv[0], "echo") == 0)
         return (builtin_echo(cmd->argv));
     else if (ft_strcmp(cmd->argv[0], "env") == 0)

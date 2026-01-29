@@ -6,7 +6,7 @@
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:21:51 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/01/27 18:44:24 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/01/29 13:21:53 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,11 +127,16 @@ int builtin_export(char **argv, t_list **env)
     char *equal;
 
     i = 1;
+    if (!argv[1])  // export with no args: print all env vars
+        return (0);
     while (argv[i])
     {
         equal = ft_strchr(argv[i],'=');
         if (!equal)
-            break;
+        {
+            i++;
+            continue;  // Skip variables without '='
+        }
         if (equal + 1)
         {
             key = ft_substr(argv[i],0,equal - argv[i]);
@@ -274,30 +279,87 @@ int builtin_exit(char **argv)
 }
 
 // 5. pwd builtin
-int builtin_pwd(void)
+
+char *get_env_value(t_list **env,char *value)
 {
-    return (1);
+    t_list *c;
+
+    c = *env;
+    while (c)
+    {
+        if (ft_strcmp(c->content ,value) == 0)//PWD=/home/gkjdagj
+            return ((char *)c->content + 4);// /home/gkjahdgjk
+        c = c->next;
+    }
+    return (NULL);
+}
+
+int builtin_pwd(t_list **env)
+{
     // Print current working directory
     // Return: 0 on success, 1 on error
+    char *pwd;
+    char *cwd;
+
+    pwd = get_env_value(env, "PWD");// /home/gkjahdgjk
+    if (pwd)
+    {
+        printf("%s\n", pwd);
+        return (0);
+    }
+    cwd = getcwd(NULL, 0);// getcwd malloced
+    if (!cwd)
+    {
+        perror("minishell: pwd");
+        return (1);
+    }
+    printf("%s\n", cwd);
+    free(cwd);
+    return (0);
 }
 
 // 6. echo builtin
 int builtin_echo(char **argv)
 {
-
-    (void)argv;
-    return (1);
     // Print arguments (handle -n flag)
     // Format: echo [-n] args...
     // Return: 0 always
+    int new_line;
+    int i;
+
+    if (!argv[1])
+    {
+        printf("\n");
+        return (0);
+    }
+    new_line = 1;
+    i = 1;
+    if (argv[1] && ft_strcmp(argv[1],"-n") == 0)
+    {
+        new_line = 0;
+        i = 2;
+    }
+    while (argv[i])
+    {
+        printf("%s",argv[i]);
+        if (argv[i + 1])
+            printf(" ");
+        i++;
+    }
+    if (new_line)
+        printf("\n");
+    return (0);
 }
 
 // 7. env builtin
 int builtin_env(t_list *env)
 {
-
-    (void)env;
-    return (1);
     // Print all environment variables
     // Return: 0 on success, 1 on error
+    while (env)
+    {
+        printf("%s\n",(char *)env->content);
+        env = env->next;
+    }
+    return (0);
 }
