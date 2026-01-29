@@ -6,7 +6,7 @@
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:21:51 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/01/29 13:21:53 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/01/29 14:19:31 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void update_env(t_list **env, char *key, char *value)
     new->content = ft_strjoin(key, value); // key must include '='
     ft_lstadd_back(env,new);
 }
-
 
 int is_variable(char *s)
 {
