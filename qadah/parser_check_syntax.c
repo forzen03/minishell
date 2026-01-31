@@ -1,0 +1,93 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_check_syntax.c                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/28 17:24:28 by mqadah            #+#    #+#             */
+/*   Updated: 2026/01/28 17:24:28 by mqadah           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+int	check_syntax_error(t_token **token)
+{
+	t_token	*last_tmp;
+	t_token	*tmp;
+
+	tmp = *token;
+	if (!tmp)
+		return (0);
+	last_tmp = *token;
+	if (tmp->type == TOKEN_PIPE)
+	{
+		write(2, "Syntax error near unexpected token `|'\n", 40);
+		g_exit_status = 2;
+		return (1);
+	}
+	if (check_consecutive_operators(tmp))
+		return (1);
+	if (check_last_operators(last_tmp))
+		return (1);
+	return (0);
+}
+
+int	check_last_operators(t_token *last_tmp)
+{
+	last_tmp = ft_lstlast_tokens(last_tmp);
+	if (last_tmp->type != TOKEN_WORD)
+	{
+		if (last_tmp->type == TOKEN_PIPE)
+			write(2, "Syntax error near unexpected token `|'\n", 40);
+		else
+			write(2, "Syntax error near unexpected token `newline'\n", 46);
+		g_exit_status = 2;
+		return (1);
+	}
+	return (0);
+}
+
+int	check_consecutive_redirections_and_pipe(t_token *tmp)
+{
+	if (tmp->next->type != TOKEN_WORD)
+	{
+		if (tmp->next->type == TOKEN_PIPE)
+			write(2, "Syntax error near unexpected token `|'\n", 40);
+		else if (tmp->next->type == TOKEN_HEREDOC)
+			write(2, "Syntax error near unexpected token `<<'\n", 41);
+		else if (tmp->next->type == TOKEN_REDIR_APPEND)
+			write(2, "Syntax error near unexpected token `>>'\n", 41);
+		else if (tmp->next->type == TOKEN_REDIR_IN)
+			write(2, "Syntax error near unexpected token `<'\n", 40);
+		else if (tmp->next->type == TOKEN_REDIR_OUT)
+			write(2, "Syntax error near unexpected token `>'\n", 40);
+		g_exit_status = 2;
+		return (1);
+	}
+	return (0);
+}
+
+int	check_consecutive_operators(t_token *tmp)
+{
+	while (tmp)
+	{
+		if (is_redirection(tmp->type) && tmp->next)
+		{
+			if (check_consecutive_redirections_and_pipe(tmp))
+				return (1);
+		}
+		else if (tmp->type == TOKEN_PIPE && tmp->next)
+		{
+			if (tmp->next->type == TOKEN_PIPE)
+			{
+				write(2, "Syntax error near unexpected token `|'\n", 40);
+				g_exit_status = 2;
+				return (1);
+			}
+		}
+		tmp = tmp->next;
+	}
+	return (0);
+}
