@@ -190,16 +190,16 @@ int		redirection_append(t_redir *redirs);
 int		apply_redirections(t_redir *redirs);
 
 /* execution - main */
-void	execution(t_cmd *cmds, t_list **envc);
-void	execute_commands(t_execution *exec, t_list ***env);
+void	execution(t_cmd *cmds, char **env);
+void	execute_commands(t_execution *exec, t_list **env);
 
 /* execution - builtins */
-int		execute_builtin(t_cmd *cmd, t_list ***env);
-int		execute_builtins_parent(t_execution *exec, t_list ***env);
+int		execute_builtin(t_cmd *cmd, t_list **env);
+int		execute_builtins_parent(t_execution *exec, t_list **env);
 void	update_env(t_list **env, char *key, char *value);
 int		is_variable(char *s);
-void	set_env(t_list *env, const char *key, const char *value);
-int		builtin_cd(char **argv, t_list *env);
+void	set_env(t_list **env, const char *key, const char *value);
+int		builtin_cd(char **argv, t_list **env);
 int		builtin_pwd(t_list **env);
 int		builtin_echo(char **argv);
 int		builtin_env(t_list *env);

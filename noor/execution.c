@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 14:27:53 by njaradat          #+#    #+#             */
-/*   Updated: 2026/01/31 13:27:20 by noorjaradat      ###   ########.fr       */
+/*   Updated: 2026/02/01 14:54:40 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static void wait_all_children(t_execution *exec)
 }
 
 // Main execution function - fork and execute all commands
-void execute_commands(t_execution *exec, t_list ***env)
+void execute_commands(t_execution *exec, t_list **env)
 {
     int i;
     t_cmd *cmd;
@@ -156,7 +156,7 @@ void execute_commands(t_execution *exec, t_list ***env)
             if (exec->types[i] == EXEC_BUILTIN_CHILD)
                 exit(execute_builtin(cmd, env));
             else  // EXEC_EXTERNAL
-                execute_external(cmd, **env);  // Never returns
+                execute_external(cmd, *env);  // Never returns
         }
         
         // Step 4: Parent process
@@ -174,10 +174,15 @@ void execute_commands(t_execution *exec, t_list ***env)
 }
 
 
-void	execution(t_cmd *cmds, t_list **envc)
+void	execution(t_cmd *cmds, char **env)
 {
 	t_execution	*exec;
+	static t_list *envc = NULL;
 
+	// Initialize environment only once
+	if (!envc)
+		envc = env_copy(env);
+	expander(cmds, envc);
 	if (!cmds)
 		return ;
 	exec = preparation(cmds);

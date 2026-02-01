@@ -23,26 +23,21 @@ void	free_two_strings(char *s1, char *s2)
 int	minishell_cycle(char *line, char **env)
 {
 	t_token	*tokens;
-	t_list	*envc;
 	t_cmd	*cmds;
 
 	tokens = tokenizer(line);
 	if (!tokens)
 		return (0);
-	envc = env_copy(env);
 	cmds = parser(tokens);
 	if (!cmds)
 	{
 		tokens_clear(&tokens, free);
-		ft_lstclear(&envc, free);
 		cmds_cleaner(cmds);
 		return (1);
 	}
 	tokens_clear(&tokens, free);
-	expander(cmds, envc);
-	execution(cmds, &envc);
+	execution(cmds,env);
 	cmds_cleaner(cmds);
-	ft_lstclear(&envc, free);
 	return (0);
 }
 

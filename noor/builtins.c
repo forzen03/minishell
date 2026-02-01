@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:21:51 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/01/31 13:20:55 by noorjaradat      ###   ########.fr       */
+/*   Updated: 2026/02/01 16:22:58 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void update_env(t_list **env, char *key, char *value)
 {
     t_list *cur;
     t_list *new;
+    char *full_value;
+    
     cur = *env;
     while (cur)
     {
@@ -27,9 +29,11 @@ void update_env(t_list **env, char *key, char *value)
         }
         cur = cur->next;
     }
-    new = malloc(sizeof(t_list));
-    new->content = ft_strjoin(key, value); // key must include '='
-    ft_lstadd_back(env,new);
+    // Add new variable to list
+    full_value = ft_strjoin(key, value);
+    new = ft_lstnew(full_value); // Properly initialize node
+    if (new)
+        ft_lstadd_back(env, new);
 }
 
 int is_variable(char *s)
@@ -52,11 +56,11 @@ int is_variable(char *s)
 
 // 1. cd builtin
 
-void set_env(t_list *env,const char *key, const char *value)
+void set_env(t_list **env,const char *key, const char *value)
 {
     t_list *cur;
 
-    cur = env;
+    cur = *env;
     while (cur)
     {
         if (ft_strncmp((char *)cur->content,key,ft_strlen(key)) == 0)
@@ -69,7 +73,7 @@ void set_env(t_list *env,const char *key, const char *value)
     }
 }
 
-int builtin_cd(char **argv, t_list *env)
+int builtin_cd(char **argv, t_list **env)
 {
     // Change directory to argv[1]
     // Update PWD in environment
@@ -85,7 +89,7 @@ int builtin_cd(char **argv, t_list *env)
     path = argv[1];
     if (!path)
     {
-        cur = env;
+        cur = *env;
         while (cur)
         {
             if (ft_strncmp((char *)cur->content,"HOME=",5) == 0)
@@ -109,8 +113,8 @@ int builtin_cd(char **argv, t_list *env)
         return 1;
     }
     //set env
-    set_env(env,"PWD=",newpwd);
-    set_env(env,"OLDPWD=",oldpwd);
+    update_env(env,"PWD=",newpwd);
+    update_env(env,"OLDPWD=",oldpwd);
     free(oldpwd);
     free(newpwd);
     return 0;
@@ -216,8 +220,12 @@ int builtin_unset(char **argv, t_list **env)
         cur = *env;
         while (cur)
         {
-            if (ft_strncmp((char *)cur->content, key, ft_strlen(key)) == 0)// PATH=user/bin   key = PATH
+            if (ft_strncmp((char *)cur->content, key, ft_strlen(key)) == 0 
+                && ((char *)cur->content)[ft_strlen(key)] == '=')// PATH=user/bin   key = PATH
+            {
                 ft_delete_node(env, cur->content, free);
+                break;  // Exit inner loop after deleting to avoid using freed memory
+            }
             cur = cur->next;
         }
         i++;
@@ -301,6 +309,9 @@ int builtin_pwd(t_list **env)
     pwd = get_pwd_value(env, "PWD");// /home/gkjahdgjk
     if (pwd)
     {
+        int i = -1;
+        while (env[++i])
+            printf("aa: %s",(char *)env[i]->content);
         printf("%s\n", pwd);
         return (0);
     }

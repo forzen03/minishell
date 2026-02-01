@@ -35,7 +35,7 @@ void	rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
 	int		*new_quote_types;
 
 	argc = 0;
-	argc = get_new_len(cmds);
+	argc = get_new_len(cmd);
 	new_argv = malloc(sizeof(char *) * (argc + 1));
 	if (!new_argv)
 		memory_allocation_failed_expand(cmds, env);
@@ -65,11 +65,16 @@ void	expander(t_cmd *cmds, t_list *env)
 		i = 0;
 		while (tmp->argv && tmp->argv[i])
 		{
+			if (tmp->quote_types[i] != 2)
+			{
 			new = expand_one_arg(tmp->argv[i], env, tmp);
 			if (!new)
 				new = ft_strdup("");
+			if (!new)
+				memory_allocation_failed_expand(cmds,env);
 			free(tmp->argv[i]);
 			tmp->argv[i] = new;
+		}
 			i++;
 		}
 		rebuild_argv(tmp, cmds, env);
@@ -89,12 +94,17 @@ void	rebuild_argv_loop(t_cmd *cmd, char **new_argv, int *new_quote_types)
 	{
 		if (cmd->argv[i][0] != '\0' || cmd->quote_types[i] != 0)
 		{
-			new_argv[j] = cmd->argv[i];
+			new_argv[j] = ft_strdup(cmd->argv[i]);
+			if (!new_argv[j])
+			{
+				while (--j >= 0)
+					free(new_argv[j]);
+				return ;
+			}
 			new_quote_types[j] = cmd->quote_types[i];
 			j++;
 		}
-		else
-			free(cmd->argv[i]);
+		free(cmd->argv[i]);
 		i++;
 	}
 }
