@@ -6,7 +6,7 @@
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 14:27:53 by njaradat          #+#    #+#             */
-/*   Updated: 2026/02/01 14:54:40 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/02 15:43:12 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ static void wait_all_children(t_execution *exec)
     int status;
     int last_status;
     
+    // Ignore SIGINT while waiting for children
+    signal(SIGINT, SIG_IGN);
+    
     i = 0;
     last_status = 0;
     while (i < exec->cmd_count)
@@ -93,10 +96,17 @@ static void wait_all_children(t_execution *exec)
         if (WIFEXITED(status))
             last_status = WEXITSTATUS(status);
         else if (WIFSIGNALED(status))
+        {
             last_status = 128 + WTERMSIG(status);
-        
+            // Print newline when child is killed by signal (like Ctrl+C)
+            if (WTERMSIG(status) == SIGINT)
+                write(1, "\n", 1);
+        }
         i++;
     }
+    
+    // Restore SIGINT handler
+    signal_handle();
     
     // Update execution status (last command's exit status becomes $?)
     exec->last_status = last_status;

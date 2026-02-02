@@ -6,7 +6,7 @@
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:21:51 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/01 16:22:58 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/02 17:12:01 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,10 +241,11 @@ int is_numeric(char *s)
 {
     int i = 0;
 
+    
     if (s[i] == '+' || s[i] == '-')
         i++;
     if (!s[i])
-        return (0);
+        return (0);+ exit status (g_exit_status) (example :if malloc fail ->return exit status + show error )
     while (s[i])
     {
         if (!ft_isdigit(s[i]))
@@ -271,7 +272,7 @@ int builtin_exit(char **argv)
     }
 
     // numeric validation
-    if (!is_numeric(argv[1]) || ft_atoi(argv[1]) < 0)
+    if (!is_numeric(argv[1]))
     {
         ft_putstr_fd("minishell: exit: ", 2);
         ft_putstr_fd(argv[1], 2);

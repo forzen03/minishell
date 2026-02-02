@@ -14,27 +14,89 @@
 
 void	handle_word(char *line, int *i, t_token **tokens)
 {
-	int		len;
-	char	*word;
 	t_token	*node;
+	char	*word;
+	int		len;
+	int		start;
 
-	len = 0;
 	node = malloc(sizeof(t_token));
 	if (!node)
 		tokens_memory_allocation_failed(tokens);
-	if (is_quoted(line, i))
+	
+	// Calculate total length first
+	start = *i;
+	len = 0;
+	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '|' && 
+		   line[*i] != '<' && line[*i] != '>')
 	{
-		handle_quoted_words(line, i, tokens, node);
-		return ;
+		if (line[*i] == '"')
+		{
+			(*i)++;
+			while (line[*i] && line[*i] != '"')
+			{
+				len++;
+				(*i)++;
+			}
+			if (line[*i] == '"')
+				(*i)++;
+		}
+		else if (line[*i] == '\'')
+		{
+			(*i)++;
+			while (line[*i] && line[*i] != '\'')
+			{
+				len++;
+				(*i)++;
+			}
+			if (line[*i] == '\'')
+				(*i)++;
+		}
+		else
+		{
+			len++;
+			(*i)++;
+		}
 	}
-	word = allocate_word_size(line, i, tokens);
-	while (line[*i] && line[*i] != '|' && line[*i] != '<' && line[*i] != '>'
-		&& line[*i] != ' ' && line[*i] != '"' && line[*i] != '\'')
+	
+	// Reset and extract content
+	*i = start;
+	word = malloc(sizeof(char) * (len + 1));
+	if (!word)
+		tokens_memory_allocation_failed(tokens);
+	
+	len = 0;
+	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '|' && 
+		   line[*i] != '<' && line[*i] != '>')
 	{
-		word[len] = line[*i];
-		(*i)++;
-		len++;
+		if (line[*i] == '"')
+		{
+			(*i)++;
+			while (line[*i] && line[*i] != '"')
+			{
+				word[len++] = line[*i];
+				(*i)++;
+			}
+			if (line[*i] == '"')
+				(*i)++;
+		}
+		else if (line[*i] == '\'')
+		{
+			(*i)++;
+			while (line[*i] && line[*i] != '\'')
+			{
+				word[len++] = line[*i];
+				(*i)++;
+			}
+			if (line[*i] == '\'')
+				(*i)++;
+		}
+		else
+		{
+			word[len++] = line[*i];
+			(*i)++;
+		}
 	}
+	
 	word_assign(node, word, len);
 	tokens_add_back(tokens, node);
 }
@@ -107,3 +169,5 @@ void	handle_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
 	else if (line[*i] == '\'')
 		handle_single_quoted_words(line, i, tokens, node);
 }
+
+
