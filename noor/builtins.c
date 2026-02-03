@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:21:51 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/03 14:14:29 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/03 17:15:39 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,19 +255,19 @@ int is_numeric(char *s)
     return (1);
 }
 
-int builtin_exit(char **argv)
+int builtin_exit(char **argv, int *exit_status)
 {
     ft_putstr_fd("exit\n", 1);
 
     // exit
     if (!argv[1])
-        exit(g_exit_status);
+        exit(*exit_status);
 
     // too many arguments
     if (argv[2])
     {
         ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-        g_exit_status = 1;
+        *exit_status = 1;
         return (1);
     }
 

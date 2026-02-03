@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 17:24:28 by mqadah            #+#    #+#             */
-/*   Updated: 2026/01/28 18:14:21 by mqadah           ###   ########.fr       */
+/*   Updated: 2026/02/03 18:17:24 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,32 +32,21 @@ char	*get_env_value(t_list *env, char *name, int *flag)
 	return (NULL);
 }
 
-char	*expand_exit_status(char *res, int *i, char *s, int *flag)
+char	*expand_exit_status(char *res, int *i, char *s, t_cmd *cmds)
 {
 	char	*value;
-	char	*old;
 
-	if (s[*i] == '?')
+	if (s[*i + 1] == '?')
 	{
-		value = ft_itoa(g_exit_status);
+		value = ft_itoa(cmds->exit_status);
 		if (!value)
-		{
-			*flag = 2;
 			return (NULL);
-		}
-		(*i)++;
-		old = res;
+		(*i) += 2;
 		res = ft_strjoin_free(res, value);
 		if (!res)
-		{
-			free_two_strings(old, value);
-			*flag = 2;
 			return (NULL);
-		}
-		*flag = 0;
 		return (res);
 	}
-	*flag = 1;
 	return (res);
 }
 
@@ -87,13 +76,12 @@ char	*expand_dollar(char *res, char *s, int *i, t_list *env)
 	int		flag;
 
 	flag = 0;
-	res = expand_exit_status(res, i, s, &flag);
-	if (flag == 2)
-		return (NULL);
-	if (flag == 0)
-		return (res);
+	(*i)++;
 	if (!ft_isalpha(s[*i]) && s[*i] != '_')
-		return (ft_charjoin(res, '$'));
+	{
+		res = ft_charjoin(res, '$');
+		return (res);
+	}
 	value = expand_dollar_con(i, s, env, &flag);
 	if (flag == 2)
 		return (NULL);
@@ -108,7 +96,7 @@ char	*expand_dollar(char *res, char *s, int *i, t_list *env)
 	return (res);
 }
 
-void	expand_redirection(t_cmd *tmp, t_list *env)
+void	expand_redirection(t_cmd *tmp, t_list *env,t_cmd *cmds)
 {
 	t_redir	*r;
 	char	*new;
@@ -121,6 +109,8 @@ void	expand_redirection(t_cmd *tmp, t_list *env)
 			new = expand_one_arg(r->file, env, tmp);
 			if (!new)
 				new = ft_strdup("");
+			if (!new)
+					memory_allocation_failed_expand(cmds,env);
 			free(r->file);
 			r->file = new;
 		}

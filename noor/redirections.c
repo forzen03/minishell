@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/31 12:05:32 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/03 16:55:07 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/03 18:56:22 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static void heredoc_sigint_handler(int sig)
 }
 
 // Child process: read heredoc content and write to pipe
-static void heredoc_child(char *delimiter, int write_fd)
+static void heredoc_child(t_redir *redir, int write_fd, t_list *env, t_cmd *cmd)
 {
     char *line;
     char *expanded_line;
@@ -96,25 +96,32 @@ static void heredoc_child(char *delimiter, int write_fd)
         {
             write(2, "minishell: warning: here-document delimited by ", 47);
             write(2, "end-of-file (wanted `", 21);
-            write(2, delimiter, ft_strlen(delimiter));
+            write(2, redir->file, ft_strlen(redir->file));
             write(2, "')\n", 3);
             break;
         }
         
         // Check if we hit the delimiter
-        if (ft_strcmp(line, delimiter) == 0)
+        if (ft_strcmp(line, redir->file) == 0)
         {
             free(line);
             break;
         }
-        
-        // TODO: qadah should implement expansion here
-        expanded_line = line;
-        
-        // Write the line with newline
-        write(write_fd, expanded_line, ft_strlen(expanded_line));
-        write(write_fd, "\n", 1);
-        free(line);
+        // احكيلي اقلك عن هاي
+        if (redir->quote_type == 0)
+        {
+            expanded_line = expand_one_arg(line, env, cmd);
+            ft_putstr_fd(expanded_line, write_fd);
+            ft_putchar_fd('\n', write_fd);
+            free(expanded_line);
+            free(line);
+        }
+        else
+        {
+            ft_putstr_fd(line, write_fd);
+            ft_putchar_fd('\n', write_fd);
+            free(line);
+        }
     }
     
     close(write_fd);
@@ -123,7 +130,7 @@ static void heredoc_child(char *delimiter, int write_fd)
 
 // Read heredoc content from stdin and store in a pipe
 // Forks a child to handle the reading (for clean signal handling)
-static int read_heredoc_content(char *delimiter)
+static int read_heredoc_content(t_redir *redir, t_list *env, t_cmd *cmd)
 {
     int fd[2];
     pid_t pid;
@@ -148,7 +155,7 @@ static int read_heredoc_content(char *delimiter)
     {
         // Child process
         close(fd[0]);
-        heredoc_child(delimiter, fd[1]);
+        heredoc_child(redir, fd[1], env, cmd);
     }
     
     // Parent process
@@ -159,7 +166,6 @@ static int read_heredoc_content(char *delimiter)
     if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
     {
         close(fd[0]);
-        g_exit_status = 130;
         return (-1);
     }
     
@@ -168,7 +174,7 @@ static int read_heredoc_content(char *delimiter)
 
 // Process all heredocs for all commands BEFORE execution
 // This must be called before any forking happens
-int process_heredocs(t_cmd *cmd_list)
+int process_heredocs(t_cmd *cmd_list, t_list *env)
 {
     t_cmd *cmd;
     t_redir *redir;
@@ -181,7 +187,7 @@ int process_heredocs(t_cmd *cmd_list)
         {
             if (redir->type == TOKEN_HEREDOC)
             {
-                redir->heredoc_fd = read_heredoc_content(redir->file);
+                redir->heredoc_fd = read_heredoc_content(redir, env, cmd);
                 if (redir->heredoc_fd == -1)
                     return (-1);
             }

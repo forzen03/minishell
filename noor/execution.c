@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 14:27:53 by njaradat          #+#    #+#             */
-/*   Updated: 2026/02/03 14:52:02 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/03 18:49:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void wait_all_children(t_execution *exec)
     int last_status;
     
     // Ignore SIGINT while waiting for children
-    signal(SIGINT, SIG_IGN);
+    setup_execution_signals();
     
     i = 0;
     last_status = 0;
@@ -106,15 +106,14 @@ static void wait_all_children(t_execution *exec)
     }
     
     // Restore SIGINT handler
-    signal_handle();
+    setup_interactive_signals();
     
     // Update execution status (last command's exit status becomes $?)
     exec->last_status = last_status;
-    g_exit_status = last_status;
 }
 
 // Main execution function - fork and execute all commands
-void execute_commands(t_execution *exec, t_list **env)
+void execute_commands(t_execution *exec, t_list **env, int *exit_status)
 {
     int i;
     t_cmd *cmd;
@@ -159,12 +158,11 @@ void execute_commands(t_execution *exec, t_list **env)
                 close_all_pipes(exec->pipes, exec->cmd_count - 1);
             
             // Step 3d: Restore default signal handlers
-            signal(SIGINT, SIG_DFL);
-            signal(SIGQUIT, SIG_DFL);
+            restore_default_signals();
             
             // Step 3e: Execute
             if (exec->types[i] == EXEC_BUILTIN_CHILD)
-                exit(execute_builtin(cmd, env));
+                exit(execute_builtin(cmd, env, exit_status));
             else  // EXEC_EXTERNAL
                 execute_external(cmd, *env);  // Never returns
         }
@@ -184,7 +182,7 @@ void execute_commands(t_execution *exec, t_list **env)
 }
 
 
-void	execution(t_cmd *cmds, char **env)
+void	execution(t_cmd *cmds, char **env, int *exit_status)
 {
 	t_execution	*exec;
 	static t_list *envc = NULL;
@@ -196,16 +194,16 @@ void	execution(t_cmd *cmds, char **env)
 	if (!cmds)
 		return ;
 	// Process heredocs BEFORE forking (while stdin is still terminal)
-	if (process_heredocs(cmds) == -1)
+	if (process_heredocs(cmds, *env) == -1)
 	{
-		g_exit_status = 1;
+		*exit_status = 130;
 		return ;
 	}
 	exec = preparation(cmds);
 	if (!exec)
 		return ;
-	execute_builtins_parent(exec, &envc);
-	execute_commands(exec, &envc);
-	g_exit_status = exec->last_status;
+	execute_builtins_parent(exec, &envc, exit_status);
+	execute_commands(exec, &envc, exit_status);
+	*exit_status = exec->last_status;
 	free_execs(exec);
 }

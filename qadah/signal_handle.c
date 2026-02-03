@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handle.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mqadah <mqadah@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 17:24:28 by mqadah            #+#    #+#             */
-/*   Updated: 2026/01/28 18:23:05 by mqadah           ###   ########.fr       */
+/*   Updated: 2026/02/03 17:44:53 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,35 @@
 
 void	signal_int_handle(int sig)
 {
-    (void)sig;
-    g_exit_status = 130;
-    write(1, "\n", 1);
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
+	g_signal = sig;//so i can know in the readline loop that ctl+c is pressed and change the exit status to 130 and retore g_sigal to 0
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-void	signal_handle(void)
+void	setup_interactive_signals(void)
 {
-    signal(SIGINT, signal_int_handle);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, signal_int_handle);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void	exit_handle(t_term *term)
+void	setup_execution_signals(void)
 {
-    rl_clear_history();
-    tcsetattr(STDIN_FILENO, TCSANOW, &term->original_term);
-    write(2, "exit\n", 6);
-    exit(g_exit_status);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-int	not_all_space(char *line)
+void	restore_default_signals(void)
 {
-    int	i;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
-    i = 0;
-    while (line[i])
-    {
-        if (line[i] != ' ' && line[i] != '\t')
-            return (1);
-        i++;
-    }
-    return (0);
+void	exit_handle(t_term *term, int exit_status)
+{
+	rl_clear_history();
+	tcsetattr(STDIN_FILENO, TCSANOW, &term->original_term);
+	write(2, "exit\n", 6);
+	exit(exit_status);
 }

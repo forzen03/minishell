@@ -24,7 +24,6 @@ int	check_syntax_error(t_token **token)
 	if (tmp->type == TOKEN_PIPE)
 	{
 		write(2, "Syntax error near unexpected token `|'\n", 40);
-		g_exit_status = 2;
 		return (1);
 	}
 	if (check_consecutive_operators(tmp))
@@ -43,7 +42,6 @@ int	check_last_operators(t_token *last_tmp)
 			write(2, "Syntax error near unexpected token `|'\n", 40);
 		else
 			write(2, "Syntax error near unexpected token `newline'\n", 46);
-		g_exit_status = 2;
 		return (1);
 	}
 	return (0);
@@ -63,7 +61,6 @@ int	check_consecutive_redirections_and_pipe(t_token *tmp)
 			write(2, "Syntax error near unexpected token `<'\n", 40);
 		else if (tmp->next->type == TOKEN_REDIR_OUT)
 			write(2, "Syntax error near unexpected token `>'\n", 40);
-		g_exit_status = 2;
 		return (1);
 	}
 	return (0);
@@ -83,7 +80,6 @@ int	check_consecutive_operators(t_token *tmp)
 			if (tmp->next->type == TOKEN_PIPE)
 			{
 				write(2, "Syntax error near unexpected token `|'\n", 40);
-				g_exit_status = 2;
 				return (1);
 			}
 		}

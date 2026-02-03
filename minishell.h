@@ -31,7 +31,7 @@
 # include <fcntl.h>
 # include <limits.h>
 
-extern int					g_exit_status;
+extern int						g_signal;
 extern volatile sig_atomic_t	g_heredoc_interrupted;
 
 typedef struct s_term
@@ -74,6 +74,7 @@ typedef struct s_cmd
 	t_redir			*redirs;
 	int				pipe_in;
 	int				pipe_out;
+	int				exit_status;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -95,15 +96,17 @@ typedef struct s_execution
 }	t_execution;
 
 /* prompt && initialization */
-void	readline_loop(t_term term, char **env);
+void	readline_loop(t_term term, char **env, int *exit_status);
 void	env_memory_allocation_fail(t_list *list);
 t_list	*env_copy(char **env);
 int		term_setting(t_term *term);
 void	init_terminal(t_term *term);
 void	check_arguments(int argc);
 void	signal_int_handle(int sig);
-void	signal_handle(void);
-void	exit_handle(t_term *term);
+void	setup_interactive_signals(void);
+void	setup_execution_signals(void);
+void	restore_default_signals(void);
+void	exit_handle(t_term *term, int exit_status);
 int		not_all_space(char *line);
 
 /* tokenizer */
@@ -131,6 +134,14 @@ void	handle_word(char *line, int *i, t_token **tokens);
 void	word_assign(t_token *node, char *word, int len);
 void	word_assign_double_quoted(t_token *node, char *word, int len);
 int		check_quotes(char *line);
+//t_token	*tokenizer(char *line);
+//int		check_quotes(char *line);
+int	return_value_of_quotes(int has_double,int has_single,int has_unquoted);
+int	is_delimiter(char c);
+void	skip_quote_section(char *line, int *i, int *len, char quote);
+int	calculate_word_length(char *line, int *i);
+void	extract_word_content(char *line, int *i, char *word);
+void init_for_quotes(int *has_double,int *has_single,int *has_unquotes);
 t_token	*tokenizer(char *line);
 
 /* parser syntax */
@@ -167,15 +178,16 @@ void	memory_allocation_failed_expand(t_cmd *cmds, t_list *envc);
 char	*expand_one_arg(char *s, t_list *envc, t_cmd *cmds);
 char	*ft_strjoin_free(char *s1, char *s2);
 char	*get_env_value(t_list *env, char *name, int *flag);
-char	*expand_exit_status(char *res, int *i, char *s, int *flag);
+char	*expand_exit_status(char *res, int *i, char *s, t_cmd *cmds);
 char	*expand_dollar(char *res, char *s, int *i, t_list *env);
-void	expand_redirection(t_cmd *tmp, t_list *env);
+void	expand_redirection(t_cmd *tmp, t_list *env,t_cmd *cmds);
 void	expander(t_cmd *cmds, t_list *env);
 int		get_new_len(t_cmd *cmd);
 void	rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env);
 void	rebuild_argv_loop(t_cmd *cmd,
 			char **new_argv, int *new_quote_types);
 void	free_two_strings(char *s1, char *s2);
+void expander_rebuild_argv_and_expand_redirections(t_cmd *tmp,t_cmd *cmds,t_list *env);
 
 /* execution - preparation */
 t_execution	*preparation(t_cmd *c);
@@ -194,16 +206,16 @@ int		redirection_in(t_redir *redirs);
 int		redirection_out(t_redir *redirs);
 int		redirection_append(t_redir *redirs);
 int		redirection_heredoc(t_redir *redirs);
-int		process_heredocs(t_cmd *cmd_list);
+int		process_heredocs(t_cmd *cmd_list, t_list *env);
 int		apply_redirections(t_redir *redirs);
 
 /* execution - main */
-void	execution(t_cmd *cmds, char **env);
-void	execute_commands(t_execution *exec, t_list **env);
+void	execution(t_cmd *cmds, char **env, int *exit_status);
+void	execute_commands(t_execution *exec, t_list **env, int *exit_status);
 
 /* execution - builtins */
-int		execute_builtin(t_cmd *cmd, t_list **env);
-int		execute_builtins_parent(t_execution *exec, t_list **env);
+int		execute_builtin(t_cmd *cmd, t_list **env, int *exit_status);
+int		execute_builtins_parent(t_execution *exec, t_list **env, int *exit_status);
 void	update_env(t_list **env, char *key, char *value);
 int		is_variable(char *s);
 void	set_env(t_list **env, const char *key, const char *value);
@@ -213,7 +225,7 @@ int		builtin_echo(char **argv);
 int		builtin_env(t_list *env);
 int		builtin_export(char **argv, t_list **env);
 int		builtin_unset(char **argv, t_list **env);
-int		builtin_exit(char **argv);
+int		builtin_exit(char **argv, int *exit_status);
 
 /* execution - environment utils */
 void	free_env_array(char **envp);

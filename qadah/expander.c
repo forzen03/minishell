@@ -68,7 +68,11 @@ void	memory_allocation_failed_expand(t_cmd *cmds, t_list *envc)
 	write(2, "Memory allocation failed\n", 26);
 	exit(1);
 }
-
+void check_res_if_NULL(char *res,t_cmd *cmds,t_list *envc)
+{
+	if (!res)
+		memory_allocation_failed_expand(cmds, envc);
+}
 char	*expand_one_arg(char *s, t_list *envc, t_cmd *cmds)
 {
 	int		i;
@@ -80,43 +84,20 @@ char	*expand_one_arg(char *s, t_list *envc, t_cmd *cmds)
 	{
 		if (s[i] == '$')
 		{
-			i++;
-			res = expand_dollar(res, s, &i, envc);
-			if (!res)
-				memory_allocation_failed_expand(cmds, envc);
+			if (s[i + 1] == '?')
+				res = expand_exit_status(res, &i, s, cmds);
+			else
+				res = expand_dollar(res, s, &i, envc);
+			check_res_if_NULL(res,cmds,envc);
 		}
 		else
 		{
 			res = ft_charjoin(res, s[i]);
-			if (!res)
-				memory_allocation_failed_expand(cmds, envc);
+			check_res_if_NULL(res,cmds,envc);
 			i++;
 		}
 	}
 	if (!res)
 		res = ft_strdup("");
 	return (res);
-}
-
-char	*ft_strjoin_free(char *s1, char *s2)
-{
-	int		n;
-	int		len;
-	char	*join;
-
-	if (s1 == NULL && s2 == NULL)
-		return (NULL);
-	if (s1 == NULL)
-		return (s2);
-	if (s2 == NULL)
-		return (s1);
-	n = ft_strlen(s1);
-	len = ft_strlen(s2);
-	join = (char *)malloc(sizeof(char) * (n + len + 1));
-	if (join == NULL)
-		return (NULL);
-	join_ope(join, s1, s2);
-	free(s1);
-	free(s2);
-	return (join);
 }

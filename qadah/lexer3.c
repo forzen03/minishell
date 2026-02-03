@@ -12,92 +12,59 @@
 
 #include "minishell.h"
 
+
+int	detect_quote_type(char *line, int i)
+{
+	int	has_double;
+	int	has_single;
+	int	has_unquoted;
+
+	init_for_quotes(&has_double,&has_single,&has_unquoted);
+	if (line[i] == '"')
+		has_double = 1;
+	else if (line[i] == '\'')
+		has_single = 1;
+	else if (!is_delimiter(line[i]))
+		has_unquoted = 1;
+	while (line[i] && !is_delimiter(line[i]))
+	{
+		if (line[i] == '"')
+			skip_quote_section(line, &i, NULL, '"');
+		else if (line[i] == '\'')
+			skip_quote_section(line, &i, NULL, '\'');
+		else
+		{
+			has_unquoted = 1;
+			i++;
+		}
+	}
+	return (return_value_of_quotes(has_double,has_single,has_unquoted));
+}
+
 void	handle_word(char *line, int *i, t_token **tokens)
 {
 	t_token	*node;
 	char	*word;
 	int		len;
-	int		start;
+	int		quote_type;
 
 	node = malloc(sizeof(t_token));
 	if (!node)
 		tokens_memory_allocation_failed(tokens);
-	
-	// Calculate total length first
-	start = *i;
-	len = 0;
-	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '|' && 
-		   line[*i] != '<' && line[*i] != '>')
-	{
-		if (line[*i] == '"')
-		{
-			(*i)++;
-			while (line[*i] && line[*i] != '"')
-			{
-				len++;
-				(*i)++;
-			}
-			if (line[*i] == '"')
-				(*i)++;
-		}
-		else if (line[*i] == '\'')
-		{
-			(*i)++;
-			while (line[*i] && line[*i] != '\'')
-			{
-				len++;
-				(*i)++;
-			}
-			if (line[*i] == '\'')
-				(*i)++;
-		}
-		else
-		{
-			len++;
-			(*i)++;
-		}
-	}
-	
-	// Reset and extract content
-	*i = start;
+	quote_type = detect_quote_type(line, *i);
+	len = calculate_word_length(line, i);
 	word = malloc(sizeof(char) * (len + 1));
 	if (!word)
-		tokens_memory_allocation_failed(tokens);
-	
-	len = 0;
-	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '|' && 
-		   line[*i] != '<' && line[*i] != '>')
 	{
-		if (line[*i] == '"')
-		{
-			(*i)++;
-			while (line[*i] && line[*i] != '"')
-			{
-				word[len++] = line[*i];
-				(*i)++;
-			}
-			if (line[*i] == '"')
-				(*i)++;
-		}
-		else if (line[*i] == '\'')
-		{
-			(*i)++;
-			while (line[*i] && line[*i] != '\'')
-			{
-				word[len++] = line[*i];
-				(*i)++;
-			}
-			if (line[*i] == '\'')
-				(*i)++;
-		}
-		else
-		{
-			word[len++] = line[*i];
-			(*i)++;
-		}
+		free(node);
+		tokens_memory_allocation_failed(tokens);
 	}
-	
-	word_assign(node, word, len);
+	extract_word_content(line, i, word);
+	word[len] = '\0';
+	node->next = NULL;
+	node->quote_type = quote_type;
+	node->value = word;
+	node->type = TOKEN_WORD;
 	tokens_add_back(tokens, node);
 }
 

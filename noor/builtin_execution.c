@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_execution.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:13:24 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/01 14:54:42 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/03 17:15:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../minishell.h"
 
-int execute_builtin(t_cmd *cmd, t_list **env)
+int execute_builtin(t_cmd *cmd, t_list **env, int *exit_status)
 {
     if (!cmd || !cmd->argv[0])
         return (1);
@@ -25,7 +25,7 @@ int execute_builtin(t_cmd *cmd, t_list **env)
     else if (ft_strcmp(cmd->argv[0], "unset") == 0)
         return (builtin_unset(cmd->argv, env));
     else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-        return (builtin_exit(cmd->argv));
+        return (builtin_exit(cmd->argv, exit_status));
     else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
         return (builtin_pwd(env));
     else if (ft_strcmp(cmd->argv[0], "echo") == 0)
@@ -35,7 +35,7 @@ int execute_builtin(t_cmd *cmd, t_list **env)
     return (1);
 }
 
-int execute_builtins_parent(t_execution *exec,t_list **env)
+int execute_builtins_parent(t_execution *exec, t_list **env, int *exit_status)
 {
     t_cmd *cmd;
     int i;
@@ -48,7 +48,7 @@ int execute_builtins_parent(t_execution *exec,t_list **env)
     {
         if (exec->types[i] == EXEC_BUILTIN_PARENT)
         {
-            g_exit_status = execute_builtin(cmd,env);
+            status = execute_builtin(cmd, env, exit_status);
         }
         cmd = cmd->next;
         i++;

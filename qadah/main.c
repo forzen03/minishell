@@ -12,82 +12,31 @@
 
 #include "minishell.h"
 
-int						g_exit_status = 0;
-volatile sig_atomic_t	g_heredoc_interrupted = 0;
+int	g_signal = 0;
 
-void	free_two_strings(char *s1, char *s2)
+int	not_all_space(char *line)
 {
-	free(s1);
-	free(s2);
+    int	i;
+
+    i = 0;
+    while (line[i])
+    {
+        if (line[i] != ' ' && line[i] != '\t')
+            return (1);
+        i++;
+    }
+    return (0);
 }
-
-int	minishell_cycle(char *line, char **env)
-{
-	t_token	*tokens;
-	t_cmd	*cmds;
-
-	tokens = tokenizer(line);
-	if (!tokens)
-		return (0);
-	cmds = parser(tokens);
-	if (!cmds)
-	{
-		tokens_clear(&tokens, free);
-		cmds_cleaner(cmds);
-		return (1);
-	}
-	tokens_clear(&tokens, free);
-	execution(cmds,env);
-	cmds_cleaner(cmds);
-	return (0);
-}
-
-int	check_quotes_loop(char *line)
-{
-	if (check_quotes(line))
-	{
-		write(2, "Syntax error: unclosed quotes\n", 31);
-		free(line);
-		return (1);
-	}
-	return (0);
-}
-
-void	readline_loop(t_term term, char **env)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = readline("minishell$ ");
-		if (!line)
-			exit_handle(&term);
-		if (!*line)
-		{
-			free(line);
-			continue ;
-		}
-		if (*line && not_all_space(line))
-			add_history(line);
-		if (check_quotes_loop(line))
-			continue ;
-		if (minishell_cycle(line, env))
-		{
-			free(line);
-			continue ;
-		}
-		free(line);
-	}
-}
-
 int	main(int argc, char **argv, char **env)
 {
 	t_term	term;
+	int		exit_status;
 
 	(void)argv;
+	exit_status = 0;
 	check_arguments(argc);
 	init_terminal(&term);
-	signal_handle();
-	readline_loop(term, env);
+	setup_interactive_signals();
+	readline_loop(term, env, &exit_status);
 	return (0);
 }

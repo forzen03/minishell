@@ -5,7 +5,8 @@ QADAH_SRCS = qadah/main.c qadah/utliltes1.c qadah/signal_handle.c \
 	qadah/lexer.c qadah/lexer1.c qadah/lexer2.c qadah/lexer3.c \
 	qadah/parser_check_syntax.c qadah/parser_redirections.c \
 	qadah/parser_utliltes.c qadah/parser_utliltes2.c qadah/parser.c \
-	qadah/expander.c qadah/expander1.c qadah/exapnder2.c
+	qadah/expander.c qadah/expander1.c qadah/exapnder2.c qadah/lexer4.c \
+	qadah/lexer5.c	qadah/main_utlis.c
 
 # Source files from noor folder
 NOOR_SRCS = noor/builtin_execution.c noor/builtins.c noor/env_utils.c \

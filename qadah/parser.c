@@ -18,10 +18,10 @@ t_cmd	*parser(t_token *tokens)
 	t_cmd	*cmds;
 	t_cmd	*prev;
 
-	if (check_syntax_error(&tokens))
-		return (NULL);
 	cmds = NULL;
 	prev = NULL;
+	if (check_syntax_error(&tokens))
+		return (NULL);
 	while (tokens)
 	{
 		node = create_parser_node(tokens, cmds);
