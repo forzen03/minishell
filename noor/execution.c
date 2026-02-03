@@ -6,7 +6,7 @@
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 14:27:53 by njaradat          #+#    #+#             */
-/*   Updated: 2026/02/02 15:43:12 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/03 14:52:02 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,12 @@ void	execution(t_cmd *cmds, char **env)
 	expander(cmds, envc);
 	if (!cmds)
 		return ;
+	// Process heredocs BEFORE forking (while stdin is still terminal)
+	if (process_heredocs(cmds) == -1)
+	{
+		g_exit_status = 1;
+		return ;
+	}
 	exec = preparation(cmds);
 	if (!exec)
 		return ;

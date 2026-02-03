@@ -6,7 +6,7 @@
 /*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:21:51 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/02 17:12:01 by njaradat         ###   ########.fr       */
+/*   Updated: 2026/02/03 14:14:29 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,7 @@ int is_numeric(char *s)
     if (s[i] == '+' || s[i] == '-')
         i++;
     if (!s[i])
-        return (0);+ exit status (g_exit_status) (example :if malloc fail ->return exit status + show error )
+        return (0);//+ exit status (g_exit_status) (example :if malloc fail ->return exit status + show error )
     while (s[i])
     {
         if (!ft_isdigit(s[i]))

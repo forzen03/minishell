@@ -13,6 +13,9 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define _POSIX_C_SOURCE 200809L
+# define _DEFAULT_SOURCE
+
 # include "./libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -28,7 +31,8 @@
 # include <fcntl.h>
 # include <limits.h>
 
-extern int	g_exit_status;
+extern int					g_exit_status;
+extern volatile sig_atomic_t	g_heredoc_interrupted;
 
 typedef struct s_term
 {
@@ -59,6 +63,7 @@ typedef struct s_redir
 	t_token_type	type;
 	char			*file;
 	int				quote_type;
+	int				heredoc_fd;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -188,6 +193,8 @@ void	close_all_pipes(int **pipes, int pipe_count);
 int		redirection_in(t_redir *redirs);
 int		redirection_out(t_redir *redirs);
 int		redirection_append(t_redir *redirs);
+int		redirection_heredoc(t_redir *redirs);
+int		process_heredocs(t_cmd *cmd_list);
 int		apply_redirections(t_redir *redirs);
 
 /* execution - main */

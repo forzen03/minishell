@@ -24,6 +24,7 @@ void	add_redir(t_cmd *cmd, t_token **tokens)
 	if (!node->file)
 		cmds_memory_allocation_failed(*tokens, cmd);
 	node->quote_type = (*tokens)->next->quote_type;
+	node->heredoc_fd = -1;
 	node->next = NULL;
 	ft_lstadd_back_redir(&cmd->redirs, node);
 	*tokens = (*tokens)->next;

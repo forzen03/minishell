@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-int		g_exit_status = 0;
+int						g_exit_status = 0;
+volatile sig_atomic_t	g_heredoc_interrupted = 0;
 
 void	free_two_strings(char *s1, char *s2)
 {
