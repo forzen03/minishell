@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:21:51 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/03 17:15:39 by marvin           ###   ########.fr       */
+/*   Updated: 2026/02/04 17:58:57 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ int builtin_export(char **argv, t_list **env)
     char *key;
     char *value;
     char *equal;
+    char *temp;
 
     i = 1;
     if (!argv[1])  // export with no args: print all env vars
@@ -147,8 +148,8 @@ int builtin_export(char **argv, t_list **env)
         }
         else
         {
-            key = ft_strdup(argv[i]);
-            value = "";
+            key = ft_substr(argv[i],0,equal - argv[i]);  // Extract key without '='
+            value = ft_strdup("");  // Allocate empty string instead of using literal
         }
         if (!is_variable(key))
         {
@@ -157,7 +158,9 @@ int builtin_export(char **argv, t_list **env)
             free(value);
             return 1;
         }
+        temp = key;  // Save old key pointer
         key = ft_strjoin(key,"=");
+        free(temp);  // Free old key
         update_env(env,key,value);
         free(key);
         free(value);
@@ -241,33 +244,50 @@ int is_numeric(char *s)
 {
     int i = 0;
 
+    // Skip leading whitespace
+    while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n' || s[i] == '\r')
+        i++;
     
+    // Check for optional sign
     if (s[i] == '+' || s[i] == '-')
         i++;
-    if (!s[i])
-        return (0);//+ exit status (g_exit_status) (example :if malloc fail ->return exit status + show error )
-    while (s[i])
-    {
-        if (!ft_isdigit(s[i]))
-            return (0);
+    
+    // Must have at least one digit
+    if (!s[i] || !ft_isdigit(s[i]))
+        return (0);
+    
+    // Check all digits
+    while (s[i] && ft_isdigit(s[i]))
         i++;
-    }
-    return (1);
+    
+    // Skip trailing whitespace
+    while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n' || s[i] == '\r')
+        i++;
+    
+    // Should be at end of string
+    return (s[i] == '\0');
 }
 
 int builtin_exit(char **argv, int *exit_status)
 {
+    int i;
+    
     ft_putstr_fd("exit\n", 1);
 
     // exit
     if (!argv[1])
+    {
+        // Close any open FDs > 2 before exiting
+        i = 3;
+        while (i < 1024)
+            close(i++);
         exit(*exit_status);
+    }
 
     // too many arguments
     if (argv[2])
     {
         ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-        *exit_status = 1;
         return (1);
     }
 
@@ -277,10 +297,18 @@ int builtin_exit(char **argv, int *exit_status)
         ft_putstr_fd("minishell: exit: ", 2);
         ft_putstr_fd(argv[1], 2);
         ft_putstr_fd(": numeric argument required\n", 2);
-        exit(255);
+        // Close any open FDs > 2 before exiting
+        i = 3;
+        while (i < 1024)
+            close(i++);
+        exit(2);
     }
 
     // valid numeric
+    // Close any open FDs > 2 before exiting
+    i = 3;
+    while (i < 1024)
+        close(i++);
     exit(ft_atoi(argv[1]) % 256);
 }
 

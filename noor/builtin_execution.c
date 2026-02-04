@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_execution.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 16:13:24 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/03 17:15:37 by marvin           ###   ########.fr       */
+/*   Updated: 2026/02/04 17:36:47 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int execute_builtins_parent(t_execution *exec, t_list **env, int *exit_status)
     t_cmd *cmd;
     int i;
     int status;
+    int saved_stdin;
+    int saved_stdout;
 
     status = 0;
     cmd = exec->cmd_list;
@@ -48,7 +50,48 @@ int execute_builtins_parent(t_execution *exec, t_list **env, int *exit_status)
     {
         if (exec->types[i] == EXEC_BUILTIN_PARENT)
         {
+            // Save original stdin/stdout
+            saved_stdin = dup(STDIN_FILENO);
+            saved_stdout = dup(STDOUT_FILENO);
+            
+            if (saved_stdin == -1 || saved_stdout == -1)
+            {
+                if (saved_stdin != -1)
+                    close(saved_stdin);
+                if (saved_stdout != -1)
+                    close(saved_stdout);
+                perror("minishell: dup");
+                status = 1;
+                cmd = cmd->next;
+                i++;
+                continue;
+            }
+            
+            // Apply redirections
+            if (apply_redirections(cmd->redirs) == -1)
+            {
+                status = 1;
+                // Restore stdin/stdout
+                dup2(saved_stdin, STDIN_FILENO);
+                dup2(saved_stdout, STDOUT_FILENO);
+                close(saved_stdin);
+                close(saved_stdout);
+                cmd = cmd->next;
+                i++;
+                continue;
+            }
+            
+            // Execute the builtin
             status = execute_builtin(cmd, env, exit_status);
+            
+            // Restore stdin/stdout
+            dup2(saved_stdin, STDIN_FILENO);
+            dup2(saved_stdout, STDOUT_FILENO);
+            close(saved_stdin);
+            close(saved_stdout);
+            
+            // If it was exit and it returned (too many args), continue
+            // If exit succeeded, we won't reach here
         }
         cmd = cmd->next;
         i++;

@@ -208,6 +208,8 @@ int		redirection_append(t_redir *redirs);
 int		redirection_heredoc(t_redir *redirs);
 int		process_heredocs(t_cmd *cmd_list, t_list *env);
 int		apply_redirections(t_redir *redirs);
+void	close_heredoc_fds(t_cmd *cmd_list);
+void	close_other_heredoc_fds(t_cmd *cmd_list, t_cmd *current_cmd);
 
 /* execution - main */
 void	execution(t_cmd *cmds, char **env, int *exit_status);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: njaradat <njaradat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 14:27:53 by njaradat          #+#    #+#             */
-/*   Updated: 2026/02/03 18:49:28 by marvin           ###   ########.fr       */
+/*   Updated: 2026/02/04 17:36:47 by njaradat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void execute_external(t_cmd *cmd, t_list *env)
     free(path);
     free_env_array(envp);
     
-    if (errno == EACCES)//check this IDK what is this
+    if (errno == EACCES)
         exit(126);  // Permission denied
     exit(127);      // Command not found or other error
 }
@@ -74,12 +74,14 @@ static void wait_all_children(t_execution *exec)
     int i;
     int status;
     int last_status;
+    int had_children;
     
     // Ignore SIGINT while waiting for children
     setup_execution_signals();
     
     i = 0;
     last_status = 0;
+    had_children = 0;
     while (i < exec->cmd_count)
     {
         // Skip if no child forked (EXEC_BUILTIN_PARENT or fork failed)
@@ -88,6 +90,8 @@ static void wait_all_children(t_execution *exec)
             i++;
             continue;
         }
+        
+        had_children = 1;
         
         // Wait for this child
         waitpid(exec->pids[i], &status, 0);
@@ -108,8 +112,9 @@ static void wait_all_children(t_execution *exec)
     // Restore SIGINT handler
     setup_interactive_signals();
     
-    // Update execution status (last command's exit status becomes $?)
-    exec->last_status = last_status;
+    // Update execution status only if we actually had children
+    if (had_children)
+        exec->last_status = last_status;
 }
 
 // Main execution function - fork and execute all commands
@@ -144,23 +149,26 @@ void execute_commands(t_execution *exec, t_list **env, int *exit_status)
         
         if (pid == 0)  // Child process
         {
-            // Step 3a: Connect pipes (stdin/stdout)
+            // Step 3a: Close heredoc FDs from other commands
+            close_other_heredoc_fds(exec->cmd_list, cmd);
+            
+            // Step 3b: Connect pipes (stdin/stdout)
             if (exec->pipes)
                 connect_pipes_for_child(i, exec->pipes, exec->cmd_count,
                                        cmd->pipe_in, cmd->pipe_out);
             
-            // Step 3b: Apply redirections (overrides pipes)
+            // Step 3c: Apply redirections (overrides pipes)
             if (apply_redirections(cmd->redirs) == -1)
                 exit(1);
             
-            // Step 3c: Close ALL pipe fds in child
+            // Step 3d: Close ALL pipe fds in child
             if (exec->pipes)
                 close_all_pipes(exec->pipes, exec->cmd_count - 1);
             
-            // Step 3d: Restore default signal handlers
+            // Step 3e: Restore default signal handlers
             restore_default_signals();
             
-            // Step 3e: Execute
+            // Step 3f: Execute
             if (exec->types[i] == EXEC_BUILTIN_CHILD)
                 exit(execute_builtin(cmd, env, exit_status));
             else  // EXEC_EXTERNAL
@@ -194,7 +202,7 @@ void	execution(t_cmd *cmds, char **env, int *exit_status)
 	if (!cmds)
 		return ;
 	// Process heredocs BEFORE forking (while stdin is still terminal)
-	if (process_heredocs(cmds, *env) == -1)
+	if (process_heredocs(cmds, envc) == -1)
 	{
 		*exit_status = 130;
 		return ;
@@ -205,5 +213,6 @@ void	execution(t_cmd *cmds, char **env, int *exit_status)
 	execute_builtins_parent(exec, &envc, exit_status);
 	execute_commands(exec, &envc, exit_status);
 	*exit_status = exec->last_status;
+	close_heredoc_fds(cmds);  // Close any remaining heredoc FDs
 	free_execs(exec);
 }
