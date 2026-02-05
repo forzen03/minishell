@@ -10,8 +10,11 @@ QADAH_SRCS = qadah/main.c qadah/utliltes1.c qadah/signal_handle.c \
 
 # Source files from noor folder
 NOOR_SRCS = noor/builtin_execution.c noor/builtins.c noor/env_utils.c \
-	noor/execution.c noor/fill.c noor/path_utils.c noor/pipe_handling.c \
-	noor/preparation_utils.c noor/preparation.c noor/redirections.c
+	noor/execution.c noor/path_utils.c noor/pipe_handling.c \
+	noor/preparation_utils.c noor/preparation.c noor/redirections.c \
+	noor/builtin_cd.c noor/builtin_exit.c noor/builtin_export.c \
+	noor/builtin_pwd.c noor/child_process.c \
+	noor/heredoc.c noor/heredoc_utils.c noor/heredoc_utils_2.c
 
 SRCS = $(QADAH_SRCS) $(NOOR_SRCS)
 

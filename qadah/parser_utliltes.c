@@ -49,7 +49,7 @@ void	cmds_memory_allocation_failed(t_token *tokens, t_cmd *cmds)
 		free(cmds);
 		cmds = tmp;
 	}
-	tokens_memory_allocation_failed(&tokens);
+	tokens_mem_allocation_failed(&tokens);
 }
 
 void	ft_lstadd_back_cmds(t_cmd **lst, t_cmd *new)

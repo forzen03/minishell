@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_utlis.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/05 15:40:51 by noorjaradat       #+#    #+#             */
+/*   Updated: 2026/02/05 15:41:11 by noorjaradat      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	free_two_strings(char *s1, char *s2)
@@ -30,7 +42,7 @@ int	minishell_cycle(char *line, char **env, int *exit_status)
 	return (0);
 }
 
-int	check_quotes_loop(char *line,int *exit_status)
+int	check_quotes_loop(char *line, int *exit_status)
 {
 	if (check_quotes(line))
 	{
@@ -41,11 +53,13 @@ int	check_quotes_loop(char *line,int *exit_status)
 	}
 	return (0);
 }
-void control_c_exit_status(int *exit_status)
+
+void	control_c_exit_status(int *exit_status)
 {
 	*exit_status = 130;
 	g_signal = 0;
 }
+
 void	readline_loop(t_term term, char **env, int *exit_status)
 {
 	char	*line;
@@ -64,9 +78,9 @@ void	readline_loop(t_term term, char **env, int *exit_status)
 		}
 		if (*line && not_all_space(line))
 			add_history(line);
-		if (check_quotes_loop(line,exit_status))
+		if (check_quotes_loop(line, exit_status))
 			continue ;
-		if (minishell_cycle(line, env,exit_status))
+		if (minishell_cycle(line, env, exit_status))
 		{
 			free(line);
 			continue ;

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer5.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/05 15:32:31 by noorjaradat       #+#    #+#             */
+/*   Updated: 2026/02/05 15:39:56 by noorjaradat      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	return_value_of_quotes(int has_double,int has_single,int has_unquoted)
+int	return_value_of_quotes(int has_double, int has_single, int has_unquoted)
 {
 	if (has_unquoted || (has_double && has_single))
 		return (0);
@@ -10,6 +22,7 @@ int	return_value_of_quotes(int has_double,int has_single,int has_unquoted)
 		return (2);
 	return (0);
 }
+
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	int		n;

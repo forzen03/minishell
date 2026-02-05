@@ -16,17 +16,18 @@ int	g_signal = 0;
 
 int	not_all_space(char *line)
 {
-    int	i;
+	int	i;
 
-    i = 0;
-    while (line[i])
-    {
-        if (line[i] != ' ' && line[i] != '\t')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] != ' ' && line[i] != '\t')
+			return (1);
+		i++;
+	}
+	return (0);
 }
+
 int	main(int argc, char **argv, char **env)
 {
 	t_term	term;

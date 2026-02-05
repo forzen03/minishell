@@ -47,19 +47,19 @@ int	check_last_operators(t_token *last_tmp)
 	return (0);
 }
 
-int	check_consecutive_redirections_and_pipe(t_token *tmp)
+int	check_consecutive_redirs_and_pipe(t_token *t)
 {
-	if (tmp->next->type != TOKEN_WORD)
+	if (t->next->type != TOKEN_WORD)
 	{
-		if (tmp->next->type == TOKEN_PIPE)
+		if (t->next->type == TOKEN_PIPE)
 			write(2, "Syntax error near unexpected token `|'\n", 40);
-		else if (tmp->next->type == TOKEN_HEREDOC)
+		else if (t->next->type == TOKEN_HEREDOC)
 			write(2, "Syntax error near unexpected token `<<'\n", 41);
-		else if (tmp->next->type == TOKEN_REDIR_APPEND)
+		else if (t->next->type == TOKEN_REDIR_APPEND)
 			write(2, "Syntax error near unexpected token `>>'\n", 41);
-		else if (tmp->next->type == TOKEN_REDIR_IN)
+		else if (t->next->type == TOKEN_REDIR_IN)
 			write(2, "Syntax error near unexpected token `<'\n", 40);
-		else if (tmp->next->type == TOKEN_REDIR_OUT)
+		else if (t->next->type == TOKEN_REDIR_OUT)
 			write(2, "Syntax error near unexpected token `>'\n", 40);
 		return (1);
 	}
@@ -72,7 +72,7 @@ int	check_consecutive_operators(t_token *tmp)
 	{
 		if (is_redirection(tmp->type) && tmp->next)
 		{
-			if (check_consecutive_redirections_and_pipe(tmp))
+			if (check_consecutive_redirs_and_pipe(tmp))
 				return (1);
 		}
 		else if (tmp->type == TOKEN_PIPE && tmp->next)

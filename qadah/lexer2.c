@@ -32,7 +32,7 @@ char	*allocate_word_size_double_quoted(char *line, int *i, t_token **tokens)
 	*i = start;
 	word = malloc(sizeof(char) * (len + 1));
 	if (!word)
-		tokens_memory_allocation_failed(tokens);
+		tokens_mem_allocation_failed(tokens);
 	return (word);
 }
 
@@ -56,7 +56,7 @@ char	*allocate_word_size_single_quoted(char *line, int *i, t_token **tokens)
 	*i = start;
 	word = malloc(sizeof(char) * (len + 1));
 	if (!word)
-		tokens_memory_allocation_failed(tokens);
+		tokens_mem_allocation_failed(tokens);
 	return (word);
 }
 

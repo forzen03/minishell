@@ -12,14 +12,13 @@
 
 #include "minishell.h"
 
-
 int	detect_quote_type(char *line, int i)
 {
 	int	has_double;
 	int	has_single;
 	int	has_unquoted;
 
-	init_for_quotes(&has_double,&has_single,&has_unquoted);
+	init_for_quotes(&has_double, &has_single, &has_unquoted);
 	if (line[i] == '"')
 		has_double = 1;
 	else if (line[i] == '\'')
@@ -38,7 +37,7 @@ int	detect_quote_type(char *line, int i)
 			i++;
 		}
 	}
-	return (return_value_of_quotes(has_double,has_single,has_unquoted));
+	return (return_value_of_quotes(has_double, has_single, has_unquoted));
 }
 
 void	handle_word(char *line, int *i, t_token **tokens)
@@ -50,14 +49,14 @@ void	handle_word(char *line, int *i, t_token **tokens)
 
 	node = malloc(sizeof(t_token));
 	if (!node)
-		tokens_memory_allocation_failed(tokens);
+		tokens_mem_allocation_failed(tokens);
 	quote_type = detect_quote_type(line, *i);
 	len = calculate_word_length(line, i);
 	word = malloc(sizeof(char) * (len + 1));
 	if (!word)
 	{
 		free(node);
-		tokens_memory_allocation_failed(tokens);
+		tokens_mem_allocation_failed(tokens);
 	}
 	extract_word_content(line, i, word);
 	word[len] = '\0';
@@ -136,5 +135,3 @@ void	handle_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
 	else if (line[*i] == '\'')
 		handle_single_quoted_words(line, i, tokens, node);
 }
-
-

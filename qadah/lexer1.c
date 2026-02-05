@@ -20,7 +20,7 @@ int	check_pipe(char *line, int *i, t_token *node, t_token **tokens)
 		node->quote_type = 1;
 		node->value = ft_strdup("|");
 		if (!node->value)
-			tokens_memory_allocation_failed(tokens);
+			tokens_mem_allocation_failed(tokens);
 		(*i)++;
 		return (1);
 	}
@@ -36,7 +36,7 @@ int	check_heredoc_and_append(char *line, int *i, t_token *node,
 		node->quote_type = 1;
 		node->value = ft_strdup("<<");
 		if (!node->value)
-			tokens_memory_allocation_failed(tokens);
+			tokens_mem_allocation_failed(tokens);
 		*i += 2;
 		return (1);
 	}
@@ -46,7 +46,7 @@ int	check_heredoc_and_append(char *line, int *i, t_token *node,
 		node->quote_type = 1;
 		node->value = ft_strdup(">>");
 		if (!node->value)
-			tokens_memory_allocation_failed(tokens);
+			tokens_mem_allocation_failed(tokens);
 		*i += 2;
 		return (1);
 	}
@@ -59,7 +59,7 @@ int	handle_operators(char *line, int *i, t_token **tokens)
 
 	node = malloc(sizeof(t_token));
 	if (!node)
-		tokens_memory_allocation_failed(tokens);
+		tokens_mem_allocation_failed(tokens);
 	if (check_heredoc_and_append(line, i, node, tokens)
 		|| check_redirection_in_out(line, i, node, tokens) || check_pipe(line,
 			i, node, tokens))
@@ -88,7 +88,7 @@ char	*allocate_word_size(char *line, int *i, t_token **tokens)
 	len = *i - start;
 	word = malloc(sizeof(char) * (len + 1));
 	if (!word)
-		tokens_memory_allocation_failed(tokens);
+		tokens_mem_allocation_failed(tokens);
 	*i = start;
 	return (word);
 }
