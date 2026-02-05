@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handle.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 17:24:28 by mqadah            #+#    #+#             */
-/*   Updated: 2026/02/03 17:44:53 by marvin           ###   ########.fr       */
+/*   Updated: 2026/02/05 17:21:50 by noorjaradat      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	signal_int_handle(int sig)
 {
-	g_signal = sig;//so i can know in the readline loop that ctl+c is pressed and change the exit status to 130 and retore g_sigal to 0
+	g_signal = sig;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);

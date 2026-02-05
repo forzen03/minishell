@@ -52,11 +52,14 @@ void	rebuild_argv(t_cmd *cmd, t_cmd *cmds, t_list *env)
 	cmd->argv = new_argv;
 	cmd->quote_types = new_quote_types;
 }
-void expander_rebuild_argv_and_expand_redirections(t_cmd *tmp,t_cmd *cmds,t_list *env)
+
+void	expander_rebuild_argv_and_expand_redirections(t_cmd *tmp, t_cmd *cmds,
+		t_list *env)
 {
 	rebuild_argv(tmp, cmds, env);
-	expand_redirection(tmp, env,cmds);
+	expand_redirection(tmp, env, cmds);
 }
+
 void	expander(t_cmd *cmds, t_list *env)
 {
 	int		i;
@@ -75,13 +78,13 @@ void	expander(t_cmd *cmds, t_list *env)
 				if (!new)
 					new = ft_strdup("");
 				if (!new)
-					memory_allocation_failed_expand(cmds,env);
+					memory_allocation_failed_expand(cmds, env);
 				free(tmp->argv[i]);
 				tmp->argv[i] = new;
 			}
 			i++;
 		}
-		expander_rebuild_argv_and_expand_redirections(tmp,cmds,env);
+		expander_rebuild_argv_and_expand_redirections(tmp, cmds, env);
 		tmp = tmp->next;
 	}
 }
@@ -111,4 +114,3 @@ void	rebuild_argv_loop(t_cmd *cmd, char **new_argv, int *new_quote_types)
 		i++;
 	}
 }
-

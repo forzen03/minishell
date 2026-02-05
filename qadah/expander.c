@@ -68,11 +68,13 @@ void	memory_allocation_failed_expand(t_cmd *cmds, t_list *envc)
 	write(2, "Memory allocation failed\n", 26);
 	exit(1);
 }
-void check_res_if_NULL(char *res,t_cmd *cmds,t_list *envc)
+
+void	check_res_if_null(char *res, t_cmd *cmds, t_list *envc)
 {
 	if (!res)
 		memory_allocation_failed_expand(cmds, envc);
 }
+
 char	*expand_one_arg(char *s, t_list *envc, t_cmd *cmds)
 {
 	int		i;
@@ -88,12 +90,12 @@ char	*expand_one_arg(char *s, t_list *envc, t_cmd *cmds)
 				res = expand_exit_status(res, &i, s, cmds);
 			else
 				res = expand_dollar(res, s, &i, envc);
-			check_res_if_NULL(res,cmds,envc);
+			check_res_if_null(res, cmds, envc);
 		}
 		else
 		{
 			res = ft_charjoin(res, s[i]);
-			check_res_if_NULL(res,cmds,envc);
+			check_res_if_null(res, cmds, envc);
 			i++;
 		}
 	}
