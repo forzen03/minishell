@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer4.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/05 17:18:55 by noorjaradat       #+#    #+#             */
+/*   Updated: 2026/02/05 17:21:39 by noorjaradat      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	is_delimiter(char c)
@@ -70,7 +82,7 @@ void	extract_word_content(char *line, int *i, char *word)
 	word[len] = '\0';
 }
 
-void init_for_quotes(int *has_double,int *has_single,int *has_unquotes)
+void	init_for_quotes(int *has_double, int *has_single, int *has_unquotes)
 {
 	(*has_double) = 0;
 	(*has_single) = 0;

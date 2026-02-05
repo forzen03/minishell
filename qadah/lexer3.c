@@ -12,14 +12,13 @@
 
 #include "minishell.h"
 
-
 int	detect_quote_type(char *line, int i)
 {
 	int	has_double;
 	int	has_single;
 	int	has_unquoted;
 
-	init_for_quotes(&has_double,&has_single,&has_unquoted);
+	init_for_quotes(&has_double, &has_single, &has_unquoted);
 	if (line[i] == '"')
 		has_double = 1;
 	else if (line[i] == '\'')
@@ -38,7 +37,7 @@ int	detect_quote_type(char *line, int i)
 			i++;
 		}
 	}
-	return (return_value_of_quotes(has_double,has_single,has_unquoted));
+	return (return_value_of_quotes(has_double, has_single, has_unquoted));
 }
 
 void	handle_word(char *line, int *i, t_token **tokens)
@@ -136,5 +135,3 @@ void	handle_quoted_words(char *line, int *i, t_token **tokens, t_token *node)
 	else if (line[*i] == '\'')
 		handle_single_quoted_words(line, i, tokens, node);
 }
-
-

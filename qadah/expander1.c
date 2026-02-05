@@ -96,7 +96,7 @@ char	*expand_dollar(char *res, char *s, int *i, t_list *env)
 	return (res);
 }
 
-void	expand_redirection(t_cmd *tmp, t_list *env,t_cmd *cmds)
+void	expand_redirection(t_cmd *tmp, t_list *env, t_cmd *cmds)
 {
 	t_redir	*r;
 	char	*new;
@@ -110,7 +110,7 @@ void	expand_redirection(t_cmd *tmp, t_list *env,t_cmd *cmds)
 			if (!new)
 				new = ft_strdup("");
 			if (!new)
-					memory_allocation_failed_expand(cmds,env);
+				memory_allocation_failed_expand(cmds, env);
 			free(r->file);
 			r->file = new;
 		}
