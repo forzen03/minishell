@@ -6,7 +6,7 @@
 /*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:15:00 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/05 17:08:44 by noorjaradat      ###   ########.fr       */
+/*   Updated: 2026/02/07 12:48:59 by noorjaradat      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	handle_heredoc_fork(t_redir *redir, t_list *env, t_cmd *cmd,
 	}
 	close(context->fd[1]);
 	waitpid(pid, &status, 0);
-	sigaction(SIGINT, &context->old_sa_int, NULL);
+	signal(SIGINT, context->old_sigint_handler);
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 	{
 		close(context->fd[0]);
@@ -41,8 +41,6 @@ int	handle_heredoc_fork(t_redir *redir, t_list *env, t_cmd *cmd,
 
 int	read_heredoc_content(t_redir *redir, t_list *env, t_cmd *cmd)
 {
-	struct sigaction	old_sa_int;
-	struct sigaction	sa_int;
 	t_heredoc_context	context;
 
 	if (pipe(context.fd) == -1)
@@ -50,11 +48,7 @@ int	read_heredoc_content(t_redir *redir, t_list *env, t_cmd *cmd)
 		perror("minishell");
 		return (-1);
 	}
-	sa_int.sa_handler = SIG_IGN;
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0;
-	sigaction(SIGINT, &sa_int, &old_sa_int);
-	context.old_sa_int = old_sa_int;
+	context.old_sigint_handler = signal(SIGINT, SIG_IGN);
 	return (handle_heredoc_fork(redir, env, cmd, &context));
 }
 

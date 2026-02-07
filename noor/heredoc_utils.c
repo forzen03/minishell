@@ -6,7 +6,7 @@
 /*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:15:00 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/05 17:23:17 by noorjaradat      ###   ########.fr       */
+/*   Updated: 2026/02/07 13:02:42 by noorjaradat      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	heredoc_child(t_redir *redir, int write_fd, t_list *env, t_cmd *cmd)
 	data.redir = redir;
 	data.env = env;
 	data.cmd = cmd;
-	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, heredoc_sigint_handler);
 	while (1)
 	{
@@ -77,7 +76,7 @@ int	handle_heredoc_fork_error(t_heredoc_context *context)
 	perror("minishell");
 	close(context->fd[0]);
 	close(context->fd[1]);
-	sigaction(SIGINT, &context->old_sa_int, NULL);
+	signal(SIGINT, context->old_sigint_handler);
 	return (-1);
 }
 

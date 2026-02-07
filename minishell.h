@@ -13,9 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define _POSIX_C_SOURCE 200809L
-# define _DEFAULT_SOURCE
-
 # include "./libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
@@ -97,7 +94,7 @@ typedef struct s_execution
 typedef struct s_heredoc_context
 {
 	int					fd[2];
-	struct sigaction	old_sa_int;
+	void				(*old_sigint_handler)(int);
 }						t_heredoc_context;
 
 typedef struct s_heredoc_line_data
