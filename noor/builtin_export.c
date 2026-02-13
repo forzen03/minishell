@@ -5,12 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/05 16:55:00 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/05 16:58:38 by noorjaradat      ###   ########.fr       */
+/*   Created: 2026/02/13 15:31:03 by noorjaradat       #+#    #+#             */
+/*   Updated: 2026/02/13 15:56:05 by noorjaradat      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void	print_sorted_env(t_list *env)
+{
+	int		count;
+	char	**env_arr;
+
+	count = count_env_nodes(env);
+	if (count == 0)
+		return ;
+	env_arr = fill_and_sort_env_array(env, count);
+	if (!env_arr)
+		return ;
+	print_env_array(env_arr, count);
+	free(env_arr);
+}
 
 static int	parse_export_argument(char *arg, char **key, char **value)
 {
@@ -70,7 +85,10 @@ int	builtin_export(char **argv, t_list **env)
 	i = 1;
 	status = 0;
 	if (!argv[1])
+	{
+		print_sorted_env(*env);
 		return (0);
+	}
 	while (argv[i])
 	{
 		if (process_export_arg(argv[i], env) != 0)

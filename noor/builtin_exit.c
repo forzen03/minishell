@@ -6,7 +6,7 @@
 /*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 16:55:00 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/05 16:58:38 by noorjaradat      ###   ########.fr       */
+/*   Updated: 2026/02/13 15:30:01 by noorjaradat      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,6 @@ int	builtin_exit(char **argv, int *exit_status)
 		close_all_fds();
 		exit(*exit_status);
 	}
-	if (argv[2])
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		return (1);
-	}
 	if (!is_numeric(argv[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
@@ -59,6 +54,11 @@ int	builtin_exit(char **argv, int *exit_status)
 		ft_putstr_fd(": numeric argument required\n", 2);
 		close_all_fds();
 		exit(2);
+	}
+	if (argv[2] && is_numeric(argv[1]))
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		return (1);
 	}
 	close_all_fds();
 	exit(ft_atoi(argv[1]) % 256);
