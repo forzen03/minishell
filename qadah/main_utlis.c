@@ -6,7 +6,7 @@
 /*   By: noorjaradat <noorjaradat@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 17:22:01 by noorjaradat       #+#    #+#             */
-/*   Updated: 2026/02/05 17:22:29 by noorjaradat      ###   ########.fr       */
+/*   Updated: 2026/02/13 16:27:06 by noorjaradat      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	control_c_exit_status(int *exit_status)
 	*exit_status = 130;
 	g_signal = 0;
 }
+
 
 void	readline_loop(t_term term, char **env, int *exit_status)
 {

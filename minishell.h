@@ -28,6 +28,13 @@
 # include <time.h>
 # include <unistd.h>
 
+
+#define RED     "\033[31m"
+#define BLACK   "\033[30m"
+#define WHITE   "\033[37m"
+#define GREEN   "\033[32m"
+#define RESET   "\033[0m"
+
 extern int			g_signal;
 
 typedef struct s_term
@@ -135,6 +142,7 @@ typedef struct s_print_sorted_env_vars
 }					t_print_sorted_env_vars;
 
 /* prompt && initialization */
+void				print_banner(void);
 void				readline_loop(t_term term, char **env, int *exit_status);
 void				env_memory_allocation_fail(t_list *list);
 t_list				*env_copy(char **env);

@@ -14,6 +14,18 @@
 
 int	g_signal = 0;
 
+void    print_banner(void)
+{
+    printf("\n");
+    printf(RED "███████╗" BLACK "███████╗" BLACK "████████╗" WHITE " █████╗ " WHITE "███████╗" GREEN " ██████╗ " GREEN "██╗  ██╗\n" RESET);
+    printf(RED "██╔════╝" BLACK "██╔════╝" BLACK "╚══██╔══╝" WHITE "██╔══██╗" WHITE "██╔════╝" GREEN "██╔═══██╗" GREEN "╚██╗██╔╝\n" RESET);
+    printf(RED "█████╗  " BLACK "███████╗" BLACK "   ██║   " WHITE "███████║" WHITE "█████╗  " GREEN "██║   ██║" GREEN " ╚███╔╝ \n" RESET);
+    printf(RED "██╔══╝  " BLACK "╚════██║" BLACK "   ██║   " WHITE "██╔══██║" WHITE "██╔══╝  " GREEN "██║   ██║" GREEN " ██╔██╗ \n" RESET);
+    printf(RED "███████╗" BLACK "███████║" BLACK "   ██║   " WHITE "██║  ██║" WHITE "██║     " GREEN "╚██████╔╝" GREEN "██╔╝ ██╗\n" RESET);
+    printf(RED "╚══════╝" BLACK "╚══════╝" BLACK "   ╚═╝   " WHITE "╚═╝  ╚═╝" WHITE "╚═╝     " GREEN " ╚═════╝ " GREEN "╚═╝  ╚═╝\n" RESET);
+    printf("\n");
+}
+
 int	not_all_space(char *line)
 {
 	int	i;
@@ -38,6 +50,7 @@ int	main(int argc, char **argv, char **env)
 	check_arguments(argc);
 	init_terminal(&term);
 	setup_interactive_signals();
+	print_banner();
 	readline_loop(term, env, &exit_status);
 	return (0);
 }
